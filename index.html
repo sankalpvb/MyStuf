@@ -3,57 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to My Poetry Garden</title>
+    <title>A Special Collection</title>
+    
+    <!-- SEO & Open Graph Tags -->
+    <meta name="description" content="A special collection of poems, shared with love.">
+    <meta property="og:title" content="A Special Gift for You">
+    <meta property="og:description" content="Celebrating a wonderful day with a collection of beautiful poems.">
+    <meta property="og:type" content="website">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Main Stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-cream">
 
-    <!-- Header -->
-    <header class="main-header">
-        <div class="container">
-            <h1 class="logo">A Quiet Place</h1>
-            <nav>
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="gift.html" class="nav-link">Gift of Poems</a>
-                <a href="admin.html" class="nav-link admin-link">Admin</a>
-            </nav>
-        </div>
+    <!-- Header & Navigation -->
+    <header id="main-header" class="main-header">
+        <nav class="container">
+            <a href="#" class="logo">S.V.B.</a>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#poems-section">Poems</a></li>
+                <li><a href="gift.html" class="nav-gift-button">A Gift For You 🎁</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <!-- Main Content -->
-    <main class="container fade-in">
-        <!-- Welcome Section -->
-        <section class="welcome-section">
-            <h2 class="section-title">Welcome to the Garden</h2>
-            <p class="section-subtitle">
-                Here, words are planted with care and feelings are allowed to bloom. Take a slow breath, wander freely, and perhaps you'll find a verse that feels like coming home.
-            </p>
-            <a href="gift.html" class="btn-primary">Explore the Poems</a>
-        </section>
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="container text-center">
+            <h1 class="hero-title">Words from the Heart</h1>
+            <p class="hero-subtitle">A personal collection of thoughts and moments, shared with you.</p>
+            <a href="#poems-section" class="cta-button">Explore the Collection</a>
+        </div>
+    </section>
 
-        <!-- Surprise Section -->
-        <section id="surprise-section" class="surprise-card" title="Click for a small blessing">
-            <h3 class="surprise-title">A Moment of Grace</h3>
-            <div id="blessing-container">
-                <p id="blessing" class="blessing-text hidden"></p>
-                <p id="blessing-placeholder" class="blessing-placeholder">Click here for a whisper from the heart...</p>
+    <!-- Poems Section -->
+    <main id="poems-section" class="poems-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">A Collection of Poems</h2>
+                <p id="last-updated" class="section-subtitle"></p>
             </div>
-        </section>
+            
+            <!-- Search & Filter Controls -->
+            <div class="controls-container">
+                <div class="search-container">
+                    <input type="search" id="search-bar" placeholder="Search for a poem..." class="search-bar">
+                </div>
+                <div id="tag-filters" class="tag-filters">
+                    <!-- Tag filter buttons will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <!-- Poems Grid -->
+            <div id="poems-grid" class="poems-grid">
+                <!-- Poems will be dynamically loaded here -->
+            </div>
+        </div>
     </main>
 
-    <!-- Footer -->
+    <!-- Poem Modal -->
+    <div id="poem-modal" class="modal-overlay hidden">
+        <div id="modal-content" class="modal-content">
+            <button id="close-modal-btn" class="modal-close-button">&times;</button>
+            <h3 id="modal-title" class="modal-title"></h3>
+            <p id="modal-date" class="modal-date"></p>
+            <div id="modal-body" class="modal-body"></div>
+        </div>
+    </div>
+    
     <footer class="main-footer">
-        <p>&copy; 2025 Your Name. All rights reserved.</p>
+        <p>Made with love. © 2025</p>
     </footer>
 
-    <!-- Scripts -->
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
-
 

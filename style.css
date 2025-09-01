@@ -1,451 +1,119 @@
-/* --- VARIABLES & BASE STYLES --- */
+/* ---
+   Root Variables & Base Styles
+--- */
 :root {
-    --cream: #FDF8F0;
-    --charcoal: #333333;
-    --warm-brown: #8A6F5A;
-    --soft-peach: #F5D7B5;
-    --heading-font: 'Playfair Display', serif;
-    --body-font: 'Lato', sans-serif;
+    --cream: #FBF8F1;
+    --dark-text: #3A3A3A;
+    --light-text: #7D7D7D;
+    --accent: #E78F8E; /* Dusty Rose */
+    --accent-dark: #b87271;
+    --border-light: #EAEAEA;
+    --card-bg: #FFFFFF;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    --font-heading: 'Lora', serif;
+    --font-body: 'Inter', sans-serif;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body { font-family: var(--font-body); color: var(--dark-text); line-height: 1.7; background-color: var(--cream); -webkit-font-smoothing: antialiased; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
-body {
-    font-family: var(--body-font);
-    background-color: var(--cream);
-    color: var(--charcoal);
-    line-height: 1.7;
-}
+/* --- Navigation Bar --- */
+.main-header { position: sticky; top: 0; width: 100%; z-index: 1000; background-color: rgba(251, 248, 241, 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-light); transition: box-shadow 0.3s ease; }
+.main-header.scrolled { box-shadow: var(--shadow); }
+.main-header .container { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+.logo { font-family: var(--font-heading); font-size: 1.8rem; font-weight: 600; color: var(--dark-text); text-decoration: none; }
+.nav-links { display: flex; align-items: center; gap: 30px; list-style: none; }
+.nav-links a { text-decoration: none; color: var(--light-text); font-weight: 600; position: relative; padding: 5px 0; transition: color 0.3s ease; }
+.nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--accent); transition: width 0.3s ease; }
+.nav-links a:hover, .nav-links a.active { color: var(--dark-text); }
+.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+.nav-gift-button { background-color: var(--accent); color: white !important; padding: 10px 20px !important; border-radius: 50px; transition: all 0.3s ease; }
+.nav-gift-button:hover { background-color: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.nav-gift-button::after { display: none; }
 
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem;
-}
+/* --- Hero Section --- */
+.hero-section { padding: 120px 0; display: flex; align-items: center; justify-content: center; }
+.hero-title { font-family: var(--font-heading); font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--dark-text); margin-bottom: 1rem; }
+.hero-subtitle { font-size: clamp(1rem, 2vw, 1.2rem); max-width: 600px; margin: 0 auto 2rem auto; color: var(--light-text); }
+.cta-button { display: inline-block; background-color: var(--dark-text); color: white; padding: 15px 35px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
+.cta-button:hover { background-color: var(--accent); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+.text-center { text-align: center; }
 
-/* --- HEADER & NAVIGATION --- */
-.main-header {
-    background: transparent;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--soft-peach);
-}
+/* --- Poems Section --- */
+.poems-section { padding: 80px 0; background-color: #fff; }
+.section-header { text-align: center; margin-bottom: 40px; }
+.section-title { font-family: var(--font-heading); font-size: 2.5rem; color: var(--dark-text); }
+.section-subtitle { color: var(--light-text); min-height: 1.25rem; }
+.controls-container { max-width: 800px; margin: 0 auto 40px; }
+.search-container { margin-bottom: 20px; }
+.search-bar { width: 100%; padding: 15px 25px; border: 1px solid var(--border-light); border-radius: 50px; font-size: 1rem; transition: all 0.3s ease; }
+.search-bar:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(231, 143, 142, 0.3); }
+.tag-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.tag-button { background-color: #f3f4f6; border: 1px solid transparent; color: var(--light-text); padding: 8px 16px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+.tag-button:hover { background-color: #e5e7eb; color: var(--dark-text); }
+.tag-button.active { background-color: var(--accent); color: white; border-color: var(--accent); }
+.poems-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+.poem-card { background-color: var(--card-bg); border: 1px solid var(--border-light); border-radius: 15px; padding: 30px; box-shadow: var(--shadow); transition: transform 0.3s ease, box-shadow 0.3s ease; opacity: 0; transform: translateY(20px); }
+.poem-card.is-visible { opacity: 1; transform: translateY(0); }
+.poem-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.07); }
+.poem-card h3 { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 10px; }
+.poem-card p { margin-bottom: 20px; white-space: pre-wrap; }
+.read-more-btn { font-weight: 600; color: var(--accent); text-decoration: none; cursor: pointer; }
+.read-more-btn:hover { text-decoration: underline; }
 
-.main-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-}
+/* --- Modal --- */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 1; transition: opacity 0.3s ease; }
+.modal-overlay.hidden { opacity: 0; pointer-events: none; }
+.modal-content { background-color: white; border-radius: 15px; padding: 40px; max-width: 650px; width: 90%; max-height: 85vh; overflow-y: auto; position: relative; transform: scale(1); transition: transform 0.3s ease; }
+.modal-overlay.hidden .modal-content { transform: scale(0.95); }
+.modal-close-button { position: absolute; top: 15px; right: 20px; font-size: 2rem; background: none; border: none; color: #bdc3c7; cursor: pointer; transition: color 0.3s ease; }
+.modal-close-button:hover { color: var(--dark-text); }
+.modal-title { font-family: var(--font-heading); font-size: 2rem; margin-bottom: 10px; }
+.modal-date { color: var(--light-text); margin-bottom: 20px; }
+.modal-body { white-space: pre-wrap; line-height: 1.8; }
+.main-footer { text-align: center; padding: 40px 20px; color: var(--light-text); border-top: 1px solid var(--border-light); }
 
-.logo {
-    font-family: var(--heading-font);
-    font-size: 1.75rem;
-    color: var(--warm-brown);
-}
+/* --- Gift Page --- */
+.gift-page-body { background: #1a1a2e; overflow: hidden; }
+.gift-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; padding: 20px; }
+.gift-content { z-index: 10; }
+.gift-title { font-family: var(--font-heading); font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 600; line-height: 1.2; text-shadow: 0 0 10px #fbc2eb, 0 0 20px #a6c1ee; animation: flicker 3s ease-in-out infinite; }
+.gift-subtitle { font-size: clamp(1.2rem, 4vw, 1.5rem); margin-top: 1rem; opacity: 0.9; }
+.back-to-home-btn { display: inline-block; margin-top: 3rem; color: white; text-decoration: none; border: 2px solid rgba(255, 255, 255, 0.5); padding: 12px 25px; border-radius: 50px; transition: all 0.3s ease; }
+.back-to-home-btn:hover { background-color: rgba(255, 255, 255, 0.1); border-color: white; }
+@keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+#particle-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+.particle { position: absolute; background-color: white; border-radius: 50%; opacity: 0; animation: rise linear infinite; }
+@keyframes rise { 0% { transform: translateY(100vh); opacity: 1; } 100% { transform: translateY(-10vh); opacity: 0; } }
 
-.nav-link {
-    font-size: 1rem;
-    color: var(--warm-brown);
-    text-decoration: none;
-    margin-left: 1.5rem;
-    transition: color 0.3s ease;
-}
-
-.nav-link.active,
-.nav-link:hover {
-    color: var(--charcoal);
-    font-weight: bold;
-}
-
-.admin-link {
-    background: var(--soft-peach);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-}
-
-/* --- REUSABLE COMPONENTS --- */
-.btn-primary {
-    display: inline-block;
-    background-color: var(--warm-brown);
-    color: var(--cream);
-    padding: 0.75rem 2rem;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-primary:hover {
-    background-color: var(--charcoal);
-    transform: translateY(-2px);
-}
-
-.btn-secondary {
-    background-color: #EAEAEA;
-    color: var(--charcoal);
-    padding: 0.75rem 1.5rem;
-    border-radius: 30px;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-secondary:hover {
-    background-color: #dcdcdc;
-}
-
-input[type="text"],
-input[type="password"],
-input[type="search"],
-textarea {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-family: var(--body-font);
-    font-size: 1rem;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-input:focus, textarea:focus {
-    outline: none;
-    border-color: var(--warm-brown);
-    box-shadow: 0 0 5px rgba(138, 111, 90, 0.3);
-}
-
-/* --- ANIMATIONS --- */
-.fade-in {
-    animation: fadeIn 1s ease-in-out forwards;
-    opacity: 0;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- HOME PAGE --- */
-.welcome-section {
-    text-align: center;
-    padding: 4rem 0;
-}
-
-.section-title {
-    font-family: var(--heading-font);
-    font-size: 3rem;
-    color: var(--charcoal);
-    margin-bottom: 1rem;
-}
-
-.section-subtitle {
-    font-size: 1.125rem;
-    max-width: 600px;
-    margin: 0 auto 2rem auto;
-    color: #555;
-}
-
-.surprise-card {
-    background: #fff;
-    border: 1px solid var(--soft-peach);
-    padding: 2.5rem;
-    border-radius: 12px;
-    text-align: center;
-    cursor: pointer;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-    margin-top: 2rem;
-}
-
-.surprise-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-}
-
-.surprise-title {
-    font-family: var(--heading-font);
-    color: var(--warm-brown);
-    margin-bottom: 1rem;
-}
-
-.blessing-text, .blessing-placeholder {
-    font-size: 1.1rem;
-    min-height: 40px;
-    font-style: italic;
-    color: #666;
-}
-
-/* --- GIFT PAGE --- */
-.filter-section {
-    margin-bottom: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-#search-input {
-    max-width: 400px;
-}
-
-#tag-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.tag-filter {
-    background: #fff;
-    border: 1px solid var(--soft-peach);
-    color: var(--warm-brown);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.tag-filter.active, .tag-filter:hover {
-    background: var(--warm-brown);
-    color: var(--cream);
-    border-color: var(--warm-brown);
-}
-
-.poems-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-}
-
-.poem-card {
-    background: #fff;
-    border: 1px solid var(--soft-peach);
-    padding: 1.5rem;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.poem-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.07);
-}
-
-.poem-title {
-    font-family: var(--heading-font);
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.poem-snippet {
-    flex-grow: 1;
-    color: #666;
-    margin-bottom: 1rem;
-}
-
-.read-more-btn {
-    align-self: flex-start;
-    color: var(--warm-brown);
-    text-decoration: none;
-    font-weight: bold;
-}
-
-/* --- MODAL --- */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.modal-overlay:not(.hidden) {
-    opacity: 1;
-}
-
-.modal-content {
-    background: var(--cream);
-    padding: 2.5rem;
-    border-radius: 12px;
-    max-width: 600px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    position: relative;
-    transform: scale(0.95);
-    transition: transform 0.3s ease;
-}
-
-.modal-overlay:not(.hidden) .modal-content {
-    transform: scale(1);
-}
-
-.modal-close-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1.5rem;
-    font-size: 2rem;
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: #aaa;
-}
-
-#modal-title {
-    font-family: var(--heading-font);
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
-
-#modal-date {
-    font-style: italic;
-    color: #888;
-    margin-bottom: 1rem;
-}
-
-#modal-tags .tag {
-    display: inline-block;
-    background: var(--soft-peach);
-    padding: 0.25rem 0.75rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    margin-right: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.poem-full-content {
-    white-space: pre-wrap;
-    line-height: 1.8;
-}
-
-/* --- ADMIN PAGE --- */
-.secure-gate, .admin-dashboard {
-    max-width: 700px;
-    margin: 2rem auto;
-}
-
-.secure-gate {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 12px;
-    text-align: center;
-}
-
-.secure-gate h2 {
-    font-family: var(--heading-font);
-    margin-bottom: 1rem;
-}
-
-.secure-gate input {
-    margin: 1rem 0;
-}
-
-.poem-editor-card, .existing-poems-card {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 12px;
-    margin-bottom: 2rem;
-}
-
-.poem-editor-card h3, .existing-poems-card h3 {
-    font-family: var(--heading-font);
-    margin-bottom: 1.5rem;
-}
-
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.form-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
-.feedback-message {
-    padding: 1rem;
-    border-radius: 8px;
-    text-align: center;
-    margin: 1rem 0;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-.feedback-message:not(.hidden) {
-    opacity: 1;
-}
-
-.feedback-success {
-    background: #d4edda;
-    color: #155724;
-}
-
-.feedback-error {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-.existing-poem-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-}
-
-.existing-poem-item:last-child {
-    border-bottom: none;
-}
-
-.poem-item-actions button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    margin-left: 1rem;
-}
-.poem-item-actions .edit-btn { color: var(--warm-brown); }
-.poem-item-actions .delete-btn { color: #c0392b; }
-
-/* --- FOOTER --- */
-.main-footer {
-    text-align: center;
-    padding: 2rem 0;
-    margin-top: 2rem;
-    border-top: 1px solid var(--soft-peach);
-    color: #999;
-}
-
-/* --- UTILITIES --- */
-.hidden {
-    display: none !important;
-}
-
-/* --- RESPONSIVE DESIGN --- */
-@media (max-width: 600px) {
-    .main-header .container {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .nav-link { margin: 0 0.5rem; }
-    .section-title { font-size: 2.25rem; }
-}
+/* --- Admin Page --- */
+.admin-body { background-color: #f3f4f6; font-family: var(--font-body); }
+.admin-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.admin-card { background-color: white; border-radius: 16px; padding: 32px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); width: 100%; }
+.login-card { max-width: 450px; text-align: center; }
+.admin-h1 { font-size: 1.8rem; font-weight: 600; color: #1f2937; margin-bottom: 8px; }
+.admin-h2 { font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 24px; }
+.admin-subtext { color: #6b7280; margin-bottom: 24px; }
+.admin-form { display: flex; flex-direction: column; gap: 16px; }
+.admin-input { width: 100%; padding: 12px 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease; }
+.admin-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); }
+.admin-button { padding: 12px 16px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+.admin-button.primary { background-color: #3b82f6; color: white; } .admin-button.primary:hover { background-color: #2563eb; }
+.admin-button.danger { background-color: #ef4444; color: white; } .admin-button.danger:hover { background-color: #dc2626; }
+.admin-button.success { background-color: #22c55e; color: white; } .admin-button.success:hover { background-color: #16a34a; }
+.admin-button.secondary { background-color: #e5e7eb; color: #374151; } .admin-button.secondary:hover { background-color: #d1d5db; }
+.admin-error-text { color: #ef4444; margin-top: 16px; min-height: 1rem; }
+.admin-dashboard-container { max-width: 1200px; margin: 0 auto; padding: 32px; }
+.admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+.admin-main-content { display: grid; grid-template-columns: 1fr; gap: 32px; }
+@media (min-width: 1024px) { .admin-main-content { grid-template-columns: 1fr 2fr; } }
+.admin-form-actions { display: flex; gap: 16px; }
+.admin-poem-list { max-height: 70vh; overflow-y: auto; padding-right: 10px; display: flex; flex-direction: column; gap: 16px; }
+.existing-poem-item { display: flex; justify-content: space-between; align-items: center; background-color: #f9fafb; padding: 16px; border-radius: 8px; }
+.poem-item-actions { display: flex; gap: 16px; }
+.edit-btn, .delete-btn { background: none; border: none; font-weight: 600; cursor: pointer; }
+.edit-btn { color: #3b82f6; } .delete-btn { color: #ef4444; }
+.hidden { display: none; }
 

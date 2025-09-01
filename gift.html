@@ -1,61 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gift of Poems</title>
+    <title>A Gift For You!</title>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-cream">
 
-    <!-- Header -->
-    <header class="main-header">
-        <div class="container">
-            <h1 class="logo">A Quiet Place</h1>
-            <nav>
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="gift.html" class="nav-link active">Gift of Poems</a>
-                <a href="admin.html" class="nav-link admin-link">Admin</a>
-            </nav>
-        </div>
-    </header>
+<body class="gift-page-body">
 
-    <!-- Main Content -->
-    <main class="container">
-        <!-- Filter and Search Section -->
-        <section class="filter-section fade-in">
-            <input type="search" id="search-input" placeholder="Search poems by title or content...">
-            <div id="tag-filters">
-                <!-- Tag filter buttons will be dynamically inserted here -->
-            </div>
-        </section>
+    <!-- Particle Container -->
+    <div id="particle-container"></div>
 
-        <!-- Poems Grid -->
-        <section id="poems-grid" class="poems-grid fade-in">
-            <!-- Poem cards will be dynamically loaded here -->
-        </section>
-    </main>
-
-    <!-- Modal for Full Poem View -->
-    <div id="poem-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <button id="close-modal" class="modal-close-btn">&times;</button>
-            <h2 id="modal-title"></h2>
-            <p id="modal-date"></p>
-            <div id="modal-tags"></div>
-            <div id="modal-content" class="poem-full-content"></div>
+    <!-- Birthday Gift Section -->
+    <div class="gift-section">
+        <div class="gift-content">
+            <h1 class="gift-title">
+                A Special Note
+            </h1>
+            <p class="gift-subtitle">
+                On this special day, I wanted to give you something that lasts far longer than any material
+                gift—something that reflects a part of me, my thoughts, and my journey. This website is my small way of
+                saying you matter, and this is my gift to you.
+            </p>
+            <p class="gift-subtitle">
+                Wishing you endless happiness, laughter that fills your heart, and dreams that unfold beautifully, just
+                like you deserve. May today be the start of another year filled with love, growth, and beautiful
+                memories.
+            </p>
+            <p class="gift-subtitle"></p>
+            Happy Birthday!
+            This gift is from the heart—something I created, not bought, because you are truly priceless.
+            </p>
+            <a href="index.html" class="back-to-home-btn">
+                ← My Poems
+            </a>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <p>&copy; 2025 Your Name. All rights reserved.</p>
-    </footer>
-
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
-</html>
 
+</html>
