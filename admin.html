@@ -2,86 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Panel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body { font-family: Arial, sans-serif; background: #f9f9f9; color: #333; padding: 20px; }
-    h1 { color: #d32f2f; }
-    label { display: block; margin-top: 10px; }
-    textarea, input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
-    button { margin-top: 15px; padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    button:hover { background: #45a049; }
-    .poem-list { margin-top: 30px; }
-    .poem-item { background: #fff; padding: 10px; border: 1px solid #ddd; margin-bottom: 10px; border-radius: 5px; }
-  </style>
+  <title>Admin Panel</title>
 </head>
 <body>
-  <h1>Admin Panel</h1>
-  <label for="title">Poem Title:</label>
-  <input type="text" id="title">
-  
-  <label for="content">Poem Content:</label>
-  <textarea id="content" rows="5"></textarea>
-  
+  <h1>📝 Add a New Poem</h1>
+  <input type="text" id="title" placeholder="Poem Title"><br><br>
+  <textarea id="content" placeholder="Poem Content"></textarea><br><br>
   <button onclick="addPoem()">Add Poem</button>
-  
-  <h2>All Poems</h2>
-  <div class="poem-list" id="poemList"></div>
 
-  <script src="config.js"></script>
   <script>
+    const token = "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"; 
     const repoOwner = "sankalpvb";
     const repoName = "MyStuf";
-    const filePath = "E:\sankalp notes\coding\Poem\poem.json";
-
-    async function fetchPoems() {
-      const res = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
-        headers: { Authorization: `token ${GITHUB_TOKEN}` }
-      });
-      const data = await res.json();
-      const content = JSON.parse(atob(data.content));
-      window.poems = content;
-      window.sha = data.sha;
-      renderPoems();
-    }
-
-    function renderPoems() {
-      const list = document.getElementById("poemList");
-      list.innerHTML = "";
-      window.poems.forEach((p, i) => {
-        const div = document.createElement("div");
-        div.className = "poem-item";
-        div.innerHTML = `<strong>${p.title}</strong><p>${p.content}</p>`;
-        list.appendChild(div);
-      });
-    }
+    const filePath = "poems.json";
 
     async function addPoem() {
       const title = document.getElementById("title").value.trim();
       const content = document.getElementById("content").value.trim();
       if (!title || !content) return alert("Please fill all fields!");
 
-      window.poems.push({ title, content });
-      const updated = btoa(JSON.stringify(window.poems, null, 2));
+      // Get existing poems
+      const res = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`);
+      const fileData = await res.json();
+      const poems = JSON.parse(atob(fileData.content));
 
+      // Add new poem
+      poems.push({ title, content });
+
+      // Update file
+      const updatedContent = btoa(JSON.stringify(poems, null, 2));
       await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
         method: "PUT",
         headers: {
-          Authorization: `token ${GITHUB_TOKEN}`,
+          "Authorization": `token ${token}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          message: "Added new poem",
-          content: updated,
-          sha: window.sha
+          message: "Add new poem",
+          content: updatedContent,
+          sha: fileData.sha
         })
       });
 
       alert("Poem added successfully!");
-      fetchPoems();
     }
-
-    fetchPoems();
   </script>
 </body>
 </html>
