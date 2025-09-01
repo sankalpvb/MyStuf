@@ -1,0 +1,39 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background: #f8f8f8;
+  margin: 0;
+  padding: 0;
+}
+header {
+  background: #222;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+main {
+  max-width: 800px;
+  margin: auto;
+  padding: 1rem;
+}
+.poem-card {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  margin: 1rem 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+textarea, input, button {
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+button {
+  background: #222;
+  color: white;
+  cursor: pointer;
+}
+@media (max-width: 600px) {
+  .poem-card { font-size: 0.9rem; }
+}
