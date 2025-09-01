@@ -1,20 +1,23 @@
 [
   {
-    "id": "1672531200000",
-    "title": "The Silent Bloom",
-    "date": "2024-01-01",
-    "content": "In fields of green, a silent bloom,<br>Awaits the sun to chase the gloom.<br>With petals soft and colors bright,<br>It dances in the morning light. hello"
+    "id": "1725221295326",
+    "title": "The First Rain",
+    "content": "The scent of dust, a thirsty prayer,\nanswered by a sudden hush.\nSky of grey, a heavy stare,\nthen the world begins to blush.\n\nEach drop a note on thirsty leaves,\na melody both soft and old,\nThe parched and waiting earth receives\na story quietly told.",
+    "tags": [
+      "nature",
+      "reflection"
+    ],
+    "date": "2025-09-01T14:48:15.326Z"
   },
   {
-    "id": "1675209600000",
-    "title": "Ocean's Whisper",
-    "date": "2024-02-01",
-    "content": "The ocean whispers to the shore,<br>Of tales and treasures evermore.<br>With every crash and gentle sigh,<br>It sings a timeless lullaby."
-  },
-  {
-    "id": "1677628800000",
-    "title": "Starlit Path",
-    "date": "2024-03-01",
-    "content": "A path of stars across the sky,<br>Where dreams take flight and spirits fly.<br>In cosmic dust and silver gleam,<br>We find the essence of a dream."
+    "id": "1725221228491",
+    "title": "A Quiet Cup",
+    "content": "In the curve of ceramic, a universe steams,\na quiet moment, a pause in the streams\nof worry and wanting, of hurry and haste.\n\nJust the warm breath of tea,\na moment to taste\nthe stillness within, the peace that it brings,\nthe silent unfolding of beautiful things.",
+    "tags": [
+      "mindfulness",
+      "reflection"
+    ],
+    "date": "2025-08-28T14:47:08.491Z"
   }
 ]
+

@@ -3,32 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gift Section - All Poems</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <title>Gift of Poems</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-cream">
 
-    <header class="text-center p-8 md:p-12">
-        <h1 class="text-4xl md:text-5xl text-charcoal font-playfair">The Gift of Poetry</h1>
-        <p class="text-lg text-gray-600 font-lato mt-2">A complete collection for you to explore.</p>
-        <nav class="mt-6">
-            <a href="index.html" class="nav-link">Home</a>
-            <a href="gift.html" class="nav-link">Gift Section</a>
-            <a href="admin.html" class="nav-link">Admin</a>
-        </nav>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <h1 class="logo">A Quiet Place</h1>
+            <nav>
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="gift.html" class="nav-link active">Gift of Poems</a>
+                <a href="admin.html" class="nav-link admin-link">Admin</a>
+            </nav>
+        </div>
     </header>
 
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div id="all-poems" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- All poems will be dynamically loaded here -->
-        </div>
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Filter and Search Section -->
+        <section class="filter-section fade-in">
+            <input type="search" id="search-input" placeholder="Search poems by title or content...">
+            <div id="tag-filters">
+                <!-- Tag filter buttons will be dynamically inserted here -->
+            </div>
+        </section>
+
+        <!-- Poems Grid -->
+        <section id="poems-grid" class="poems-grid fade-in">
+            <!-- Poem cards will be dynamically loaded here -->
+        </section>
     </main>
 
-    <footer class="text-center p-6 mt-12 bg-white shadow-inner">
-        <p class="font-lato text-gray-600">&copy; 2024 Your Name. All Rights Reserved.</p>
+    <!-- Modal for Full Poem View -->
+    <div id="poem-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="close-modal" class="modal-close-btn">&times;</button>
+            <h2 id="modal-title"></h2>
+            <p id="modal-date"></p>
+            <div id="modal-tags"></div>
+            <div id="modal-content" class="poem-full-content"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <p>&copy; 2025 Your Name. All rights reserved.</p>
     </footer>
 
+    <script src="config.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
+

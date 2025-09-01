@@ -1,70 +1,451 @@
-@import url('https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css');
-
-/* Custom Base Styles */
+/* --- VARIABLES & BASE STYLES --- */
 :root {
-    --cream: #FDFBF5;
+    --cream: #FDF8F0;
     --charcoal: #333333;
-    --teal: #5E8B7E;
-    --light-gray: #f4f4f4;
+    --warm-brown: #8A6F5A;
+    --soft-peach: #F5D7B5;
+    --heading-font: 'Playfair Display', serif;
+    --body-font: 'Lato', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Lato', sans-serif;
-    color: var(--charcoal);
-}
-
-.bg-cream {
+    font-family: var(--body-font);
     background-color: var(--cream);
-}
-
-.text-charcoal {
     color: var(--charcoal);
+    line-height: 1.7;
 }
 
-.text-teal {
-    color: var(--teal);
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
 }
 
-.font-playfair {
-    font-family: 'Playfair Display', serif;
+/* --- HEADER & NAVIGATION --- */
+.main-header {
+    background: transparent;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--soft-peach);
 }
 
-.font-lato {
-    font-family: 'Lato', sans-serif;
+.main-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
-/* Navigation */
+.logo {
+    font-family: var(--heading-font);
+    font-size: 1.75rem;
+    color: var(--warm-brown);
+}
+
 .nav-link {
-    @apply mx-3 text-lg text-gray-600 hover:text-teal transition-colors duration-300 font-lato;
+    font-size: 1rem;
+    color: var(--warm-brown);
+    text-decoration: none;
+    margin-left: 1.5rem;
+    transition: color 0.3s ease;
 }
 
-/* Poem Card Styling */
-.poem-card {
-    @apply bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300;
+.nav-link.active,
+.nav-link:hover {
+    color: var(--charcoal);
+    font-weight: bold;
 }
 
-.poem-title {
-    @apply text-2xl font-playfair text-charcoal mb-2;
+.admin-link {
+    background: var(--soft-peach);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
 }
 
-.poem-date {
-    @apply text-sm text-gray-500 font-lato mb-4;
-}
-
-.poem-content {
-    @apply text-gray-700 font-lato leading-relaxed whitespace-pre-line;
-}
-
-
-/* Admin Panel Form Styling */
-.form-input {
-    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal transition-shadow duration-300;
-}
-
+/* --- REUSABLE COMPONENTS --- */
 .btn-primary {
-    @apply bg-teal text-white font-bold py-2 px-6 rounded-lg hover:bg-opacity-90 transition-colors duration-300 shadow-md;
+    display: inline-block;
+    background-color: var(--warm-brown);
+    color: var(--cream);
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--charcoal);
+    transform: translateY(-2px);
 }
 
 .btn-secondary {
-    @apply bg-gray-300 text-charcoal font-bold py-2 px-6 rounded-lg hover:bg-gray-400 transition-colors duration-300 shadow-md;
+    background-color: #EAEAEA;
+    color: var(--charcoal);
+    padding: 0.75rem 1.5rem;
+    border-radius: 30px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
+
+.btn-secondary:hover {
+    background-color: #dcdcdc;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="search"],
+textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: var(--body-font);
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--warm-brown);
+    box-shadow: 0 0 5px rgba(138, 111, 90, 0.3);
+}
+
+/* --- ANIMATIONS --- */
+.fade-in {
+    animation: fadeIn 1s ease-in-out forwards;
+    opacity: 0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- HOME PAGE --- */
+.welcome-section {
+    text-align: center;
+    padding: 4rem 0;
+}
+
+.section-title {
+    font-family: var(--heading-font);
+    font-size: 3rem;
+    color: var(--charcoal);
+    margin-bottom: 1rem;
+}
+
+.section-subtitle {
+    font-size: 1.125rem;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    color: #555;
+}
+
+.surprise-card {
+    background: #fff;
+    border: 1px solid var(--soft-peach);
+    padding: 2.5rem;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    margin-top: 2rem;
+}
+
+.surprise-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.surprise-title {
+    font-family: var(--heading-font);
+    color: var(--warm-brown);
+    margin-bottom: 1rem;
+}
+
+.blessing-text, .blessing-placeholder {
+    font-size: 1.1rem;
+    min-height: 40px;
+    font-style: italic;
+    color: #666;
+}
+
+/* --- GIFT PAGE --- */
+.filter-section {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#search-input {
+    max-width: 400px;
+}
+
+#tag-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag-filter {
+    background: #fff;
+    border: 1px solid var(--soft-peach);
+    color: var(--warm-brown);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tag-filter.active, .tag-filter:hover {
+    background: var(--warm-brown);
+    color: var(--cream);
+    border-color: var(--warm-brown);
+}
+
+.poems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.poem-card {
+    background: #fff;
+    border: 1px solid var(--soft-peach);
+    padding: 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.poem-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.07);
+}
+
+.poem-title {
+    font-family: var(--heading-font);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.poem-snippet {
+    flex-grow: 1;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.read-more-btn {
+    align-self: flex-start;
+    color: var(--warm-brown);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* --- MODAL --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay:not(.hidden) {
+    opacity: 1;
+}
+
+.modal-content {
+    background: var(--cream);
+    padding: 2.5rem;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay:not(.hidden) .modal-content {
+    transform: scale(1);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #aaa;
+}
+
+#modal-title {
+    font-family: var(--heading-font);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+#modal-date {
+    font-style: italic;
+    color: #888;
+    margin-bottom: 1rem;
+}
+
+#modal-tags .tag {
+    display: inline-block;
+    background: var(--soft-peach);
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.poem-full-content {
+    white-space: pre-wrap;
+    line-height: 1.8;
+}
+
+/* --- ADMIN PAGE --- */
+.secure-gate, .admin-dashboard {
+    max-width: 700px;
+    margin: 2rem auto;
+}
+
+.secure-gate {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.secure-gate h2 {
+    font-family: var(--heading-font);
+    margin-bottom: 1rem;
+}
+
+.secure-gate input {
+    margin: 1rem 0;
+}
+
+.poem-editor-card, .existing-poems-card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.poem-editor-card h3, .existing-poems-card h3 {
+    font-family: var(--heading-font);
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.feedback-message {
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    margin: 1rem 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.feedback-message:not(.hidden) {
+    opacity: 1;
+}
+
+.feedback-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.feedback-error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.existing-poem-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.existing-poem-item:last-child {
+    border-bottom: none;
+}
+
+.poem-item-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 1rem;
+}
+.poem-item-actions .edit-btn { color: var(--warm-brown); }
+.poem-item-actions .delete-btn { color: #c0392b; }
+
+/* --- FOOTER --- */
+.main-footer {
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 2rem;
+    border-top: 1px solid var(--soft-peach);
+    color: #999;
+}
+
+/* --- UTILITIES --- */
+.hidden {
+    display: none !important;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 600px) {
+    .main-header .container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .nav-link { margin: 0 0.5rem; }
+    .section-title { font-size: 2.25rem; }
+}
+

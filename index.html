@@ -3,54 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whispers of the Soul</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <title>Welcome to My Poetry Garden</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-cream">
 
-    <header class="text-center p-8 md:p-12">
-        <h1 class="text-4xl md:text-5xl text-charcoal font-playfair">Whispers of the Soul</h1>
-        <p class="text-lg text-gray-600 font-lato mt-2">A collection of heartfelt poetry</p>
-        <nav class="mt-6">
-            <a href="index.html" class="nav-link">Home</a>
-            <a href="gift.html" class="nav-link">Gift Section</a>
-            <a href="admin.html" class="nav-link">Admin</a>
-        </nav>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <h1 class="logo">A Quiet Place</h1>
+            <nav>
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="gift.html" class="nav-link">Gift of Poems</a>
+                <a href="admin.html" class="nav-link admin-link">Admin</a>
+            </nav>
+        </div>
     </header>
 
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8">
-
+    <!-- Main Content -->
+    <main class="container fade-in">
         <!-- Welcome Section -->
-        <section class="text-center my-12">
-            <h2 class="text-3xl font-playfair text-charcoal">Welcome</h2>
-            <p class="max-w-2xl mx-auto mt-4 text-gray-700 font-lato">
-                Here you'll find a collection of poems that explore the depths of emotion and the beauty of the human spirit. Take a moment to breathe, reflect, and enjoy.
+        <section class="welcome-section">
+            <h2 class="section-title">Welcome to the Garden</h2>
+            <p class="section-subtitle">
+                Here, words are planted with care and feelings are allowed to bloom. Take a slow breath, wander freely, and perhaps you'll find a verse that feels like coming home.
             </p>
+            <a href="gift.html" class="btn-primary">Explore the Poems</a>
         </section>
 
         <!-- Surprise Section -->
-        <section id="surprise-section" class="my-16 p-8 bg-white rounded-lg shadow-md max-w-lg mx-auto text-center cursor-pointer transform hover:scale-105 transition-transform duration-300">
-            <h3 class="text-2xl font-playfair text-charcoal">A Little Surprise for You</h3>
-            <p class="text-gray-600 mt-2 font-lato">Click to reveal a blessing.</p>
-            <blockquote id="blessing" class="hidden text-xl font-playfair italic text-teal mt-4"></blockquote>
-        </section>
-
-
-        <!-- Featured Poems Section -->
-        <section class="my-16">
-            <h2 class="text-3xl font-playfair text-charcoal text-center mb-8">Featured Poems</h2>
-            <div id="featured-poems" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Poems will be dynamically loaded here -->
+        <section id="surprise-section" class="surprise-card" title="Click for a small blessing">
+            <h3 class="surprise-title">A Moment of Grace</h3>
+            <div id="blessing-container">
+                <p id="blessing" class="blessing-text hidden"></p>
+                <p id="blessing-placeholder" class="blessing-placeholder">Click here for a whisper from the heart...</p>
             </div>
         </section>
-
     </main>
 
-    <footer class="text-center p-6 mt-12 bg-white shadow-inner">
-        <p class="font-lato text-gray-600">&copy; 2024 Your Name. All Rights Reserved.</p>
+    <!-- Footer -->
+    <footer class="main-footer">
+        <p>&copy; 2025 Your Name. All rights reserved.</p>
     </footer>
 
+    <!-- Scripts -->
+    <script src="config.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
+
