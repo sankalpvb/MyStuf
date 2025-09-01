@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const POEMS_PATH = 'poems.json';
+    // --- Configuration ---
+    const POEMS_PATH = 'poems.json'; // The path to your poems file in the repository
 
     // --- General Site Logic ---
     const page = window.location.pathname.split("/").pop();
@@ -17,11 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
         handleAdmin();
     }
 
+    /**
+     * Fetches poems from the poems.json file.
+     * Uses a cache-busting query parameter to ensure the latest version is fetched.
+     */
     async function fetchPoems() {
         try {
-            const response = await fetch(POEMS_PATH);
+            // Add a timestamp to prevent the browser from caching the poems file
+            const response = await fetch(`${POEMS_PATH}?t=${new Date().getTime()}`);
+            if (response.status === 404) {
+                console.error('poems.json not found. A new one will be created when you save your first poem.');
+                return [];
+            }
             if (!response.ok) {
-                console.error('poems.json not found. Please create it in your repository.');
+                console.error(`Error fetching poems. Status: ${response.status}`);
                 return [];
             }
             return await response.json();
@@ -31,29 +41,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * Creates an HTML element for a single poem.
+     * @param {object} poem - The poem object with title, date, and content.
+     * @returns {HTMLElement} - The div element representing the poem card.
+     */
     function createPoemCard(poem) {
         const card = document.createElement('div');
         card.className = 'poem-card';
         card.innerHTML = `
             <h3 class="poem-title">${poem.title}</h3>
             <p class="poem-date">${poem.date}</p>
-            <div class="poem-content">${poem.content}</div>
+            <div class="poem-content">${poem.content.replace(/\n/g, '<br>')}</div>
         `;
         return card;
     }
 
+    /**
+     * Loads the latest 3 poems into the featured poems section on the homepage.
+     */
     async function loadFeaturedPoems() {
         const container = document.getElementById('featured-poems');
         if (!container) return;
         
         const poems = await fetchPoems();
         container.innerHTML = ''; // Clear existing
-        // Show latest 3 poems
         poems.slice(0, 3).forEach(poem => {
             container.appendChild(createPoemCard(poem));
         });
     }
 
+    /**
+     * Loads all poems into the gift section page.
+     */
     async function loadAllPoems() {
         const container = document.getElementById('all-poems');
         if (!container) return;
@@ -65,6 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /**
+     * Handles the logic for the "Surprise Section" on the homepage.
+     */
     function handleSurpriseSection() {
         const section = document.getElementById('surprise-section');
         const blessingEl = document.getElementById('blessing');
@@ -80,22 +103,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         section.addEventListener('click', () => {
             const randomIndex = Math.floor(Math.random() * blessings.length);
-            blessingEl.textContent = blessings[randomIndex];
+            blessingEl.textContent = `"${blessings[randomIndex]}"`;
             blessingEl.classList.remove('hidden');
         });
     }
 
-
     // --- Admin Panel Logic ---
+
+    /**
+     * Initializes all functionality for the admin page.
+     */
     function handleAdmin() {
         const loginSection = document.getElementById('login-section');
         const dashboard = document.getElementById('admin-dashboard');
         const loginForm = document.getElementById('login-form');
         const logoutBtn = document.getElementById('logout-btn');
+        const loginMessage = document.getElementById('login-message');
 
         let githubConfig = {};
 
-        // Check for saved credentials
+        // Check for saved credentials in session storage
         if (sessionStorage.getItem('github_token')) {
             githubConfig = {
                 username: sessionStorage.getItem('github_username'),
@@ -108,20 +135,26 @@ document.addEventListener('DOMContentLoaded', () => {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             githubConfig = {
-                username: document.getElementById('username').value,
-                repo: document.getElementById('repo').value,
-                token: document.getElementById('token').value,
+                username: document.getElementById('username').value.trim(),
+                repo: document.getElementById('repo').value.trim(),
+                token: document.getElementById('token').value.trim(),
             };
-            sessionStorage.setItem('github_username', githubConfig.username);
-            sessionStorage.setItem('github_repo', githubConfig.repo);
-            sessionStorage.setItem('github_token', githubConfig.token);
-            showDashboard();
+            // Simple validation
+            if(githubConfig.username && githubConfig.repo && githubConfig.token){
+                sessionStorage.setItem('github_username', githubConfig.username);
+                sessionStorage.setItem('github_repo', githubConfig.repo);
+                sessionStorage.setItem('github_token', githubConfig.token);
+                showDashboard();
+            } else {
+                loginMessage.textContent = "Please fill in all fields.";
+            }
         });
 
         logoutBtn.addEventListener('click', () => {
             sessionStorage.clear();
             loginSection.classList.remove('hidden');
             dashboard.classList.add('hidden');
+            loginMessage.textContent = "You have been logged out.";
         });
 
         function showDashboard() {
@@ -144,39 +177,48 @@ document.addEventListener('DOMContentLoaded', () => {
         function setupPoemForm() {
             poemForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                commitMsg.textContent = 'Saving...';
+                setCommitMessage('Saving...', 'text-blue-500');
                 
-                const poem = {
+                const poemData = {
                     id: poemIdInput.value || Date.now().toString(),
                     title: titleInput.value,
                     date: dateInput.value,
                     content: contentInput.value,
                 };
                 
-                let poems = await getPoemsFromGitHub();
-                const existingIndex = poems.findIndex(p => p.id === poem.id);
+                let currentPoems = await getPoemsFromGitHub();
+                const existingIndex = currentPoems.findIndex(p => p.id === poemData.id);
 
                 if (existingIndex > -1) {
-                    poems[existingIndex] = poem;
+                    currentPoems[existingIndex] = poemData; // Update existing
                 } else {
-                    poems.unshift(poem);
+                    currentPoems.unshift(poemData); // Add new
                 }
 
-                await updatePoemsOnGitHub(poems);
-                commitMsg.textContent = 'Poem saved successfully!';
-                setTimeout(() => commitMsg.textContent = '', 3000);
-                
-                loadAdminPoemList();
-                clearPoemForm();
+                const success = await updatePoemsOnGitHub(currentPoems);
+                if (success) {
+                    setCommitMessage('Poem saved successfully!', 'text-green-500');
+                    loadAdminPoemList();
+                    clearPoemForm();
+                } 
+                // Error message is set within the update function
             });
 
             clearBtn.addEventListener('click', clearPoemForm);
+        }
+        
+        function setCommitMessage(message, colorClass) {
+            commitMsg.textContent = message;
+            commitMsg.className = `text-center my-4 ${colorClass}`;
+            setTimeout(() => commitMsg.textContent = '', 4000);
         }
 
         function clearPoemForm() {
             poemForm.reset();
             poemIdInput.value = '';
             formTitle.textContent = 'Add a New Poem';
+            // Set date to today by default for new poems
+            dateInput.value = new Date().toISOString().split('T')[0];
         }
 
         async function loadAdminPoemList() {
@@ -186,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             listContainer.innerHTML = '';
             if (poems.length === 0) {
-                 listContainer.innerHTML = '<p>No poems found. Add one above!</p>';
+                 listContainer.innerHTML = '<p>No poems found. Add your first one above!</p>';
                  return;
             }
             
@@ -206,12 +248,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 listContainer.appendChild(poemEl);
             });
             
-            // Add event listeners for edit/delete
             listContainer.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
-                    let poems = await getPoemsFromGitHub();
-                    const poemToEdit = poems.find(p => p.id === id);
+                    let allPoems = await getPoemsFromGitHub();
+                    const poemToEdit = allPoems.find(p => p.id === id);
                     if(poemToEdit) {
                         poemIdInput.value = poemToEdit.id;
                         titleInput.value = poemToEdit.title;
@@ -226,14 +267,15 @@ document.addEventListener('DOMContentLoaded', () => {
             listContainer.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
                     if (!confirm('Are you sure you want to delete this poem?')) return;
-                    commitMsg.textContent = 'Deleting...';
+                    setCommitMessage('Deleting...', 'text-blue-500');
                     const id = e.target.getAttribute('data-id');
-                    let poems = await getPoemsFromGitHub();
-                    const updatedPoems = poems.filter(p => p.id !== id);
-                    await updatePoemsOnGitHub(updatedPoems);
-                    commitMsg.textContent = 'Poem deleted!';
-                    setTimeout(() => commitMsg.textContent = '', 3000);
-                    loadAdminPoemList();
+                    let allPoems = await getPoemsFromGitHub();
+                    const updatedPoems = allPoems.filter(p => p.id !== id);
+                    const success = await updatePoemsOnGitHub(updatedPoems);
+                    if (success) {
+                        setCommitMessage('Poem deleted successfully!', 'text-green-500');
+                        loadAdminPoemList();
+                    }
                 });
             });
         }
@@ -241,65 +283,84 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- GitHub API Integration ---
         const API_URL = 'https://api.github.com';
 
+        async function githubApiRequest(url, options = {}) {
+            const defaultOptions = {
+                headers: {
+                    'Authorization': `token ${githubConfig.token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                }
+            };
+            const response = await fetch(url, { ...defaultOptions, ...options });
+            if (!response.ok) {
+                const errorData = await response.json();
+                const errorMessage = errorData.message || `HTTP error! status: ${response.status}`;
+                console.error('GitHub API Error:', errorMessage);
+                setCommitMessage(`GitHub Error: ${errorMessage}`, 'text-red-500');
+                throw new Error(errorMessage);
+            }
+            // For 204 No Content response, which can happen.
+            if (response.status === 204) return null;
+            return response.json();
+        }
+        
         async function getFileSha(path) {
             const url = `${API_URL}/repos/${githubConfig.username}/${githubConfig.repo}/contents/${path}`;
             try {
-                const response = await fetch(url, {
-                    headers: { 'Authorization': `token ${githubConfig.token}` }
-                });
-                if (!response.ok) return null; // File might not exist yet
-                const data = await response.json();
+                const data = await githubApiRequest(url);
                 return data.sha;
             } catch (error) {
-                console.error("Error getting file SHA:", error);
+                // If the error message includes "Not Found", it means the file doesn't exist yet.
+                if (error.message.includes("Not Found")) {
+                    console.log("poems.json not found. Will create a new one.");
+                    return null;
+                }
+                // For other errors (like auth issues), the error is already displayed by githubApiRequest.
                 return null;
             }
         }
 
         async function getPoemsFromGitHub() {
-            const url = `https://raw.githubusercontent.com/${githubConfig.username}/${githubConfig.repo}/main/poems.json`;
+            // This function intentionally avoids the authenticated API to always get the latest public version
+            const url = `https://raw.githubusercontent.com/${githubConfig.username}/${githubConfig.repo}/main/${POEMS_PATH}`;
             try {
                 const response = await fetch(`${url}?t=${new Date().getTime()}`); // Cache-busting
                 if (!response.ok) return [];
                 return await response.json();
             } catch (error) {
-                console.error("Error fetching poems from GitHub:", error);
                 return [];
             }
         }
         
         async function updatePoemsOnGitHub(poems) {
-            const path = 'poems.json';
-            const url = `${API_URL}/repos/${githubConfig.username}/${githubConfig.repo}/contents/${path}`;
+            const url = `${API_URL}/repos/${githubConfig.username}/${githubConfig.repo}/contents/${POEMS_PATH}`;
             const content = JSON.stringify(poems, null, 2);
             
-            const sha = await getFileSha(path);
-
-            const body = {
-                message: `Update poems: ${new Date().toISOString()}`,
-                content: btoa(unescape(encodeURIComponent(content))), // Base64 encode
-                sha: sha,
-            };
-
             try {
-                const response = await fetch(url, {
+                const sha = await getFileSha(POEMS_PATH);
+
+                const body = {
+                    message: `Update poems: ${new Date().toISOString()}`,
+                    content: btoa(unescape(encodeURIComponent(content))), // Base64 encode
+                };
+                
+                // **CRITICAL FIX**: Only include SHA if the file already exists.
+                // The GitHub API requires the SHA for updates but not for new file creation.
+                if (sha) {
+                    body.sha = sha;
+                }
+
+                await githubApiRequest(url, {
                     method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${githubConfig.token}`,
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(body)
                 });
 
-                if (!response.ok) {
-                    const error = await response.json();
-                    console.error('GitHub API Error:', error.message);
-                    commitMsg.textContent = `Error: ${error.message}`;
-                }
+                return true; // Success
             } catch (error) {
-                console.error("Error updating poems on GitHub:", error);
-                 commitMsg.textContent = `Error: ${error.message}`;
+                // Error is displayed by the helper functions
+                return false; // Failure
             }
         }
     }
 });
+
