@@ -1,35 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Poem Collection</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whispers of the Soul</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <h1>📜 My Poems</h1>
-  <div id="poem-list"></div>
+<body class="bg-cream">
 
-  <script>
-    const repoOwner = "YOUR_GITHUB_USERNAME";
-    const repoName = "YOUR_REPO_NAME";
-    const filePath = "poems.json"; // store poems here
+    <header class="text-center p-8 md:p-12">
+        <h1 class="text-4xl md:text-5xl text-charcoal font-playfair">Whispers of the Soul</h1>
+        <p class="text-lg text-gray-600 font-lato mt-2">A collection of heartfelt poetry</p>
+        <nav class="mt-6">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="gift.html" class="nav-link">Gift Section</a>
+            <a href="admin.html" class="nav-link">Admin</a>
+        </nav>
+    </header>
 
-    async function loadPoems() {
-      const response = await fetch(`https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/${filePath}`);
-      const poems = await response.json();
-      const poemList = document.getElementById("poem-list");
-      poemList.innerHTML = "";
-      
-      poems.forEach(poem => {
-        const poemDiv = document.createElement("div");
-        poemDiv.className = "poem";
-        poemDiv.innerHTML = `<h3>${poem.title}</h3><p>${poem.content}</p>`;
-        poemList.appendChild(poemDiv);
-      });
-    }
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8">
 
-    loadPoems();
-  </script>
+        <!-- Welcome Section -->
+        <section class="text-center my-12">
+            <h2 class="text-3xl font-playfair text-charcoal">Welcome</h2>
+            <p class="max-w-2xl mx-auto mt-4 text-gray-700 font-lato">
+                Here you'll find a collection of poems that explore the depths of emotion and the beauty of the human spirit. Take a moment to breathe, reflect, and enjoy.
+            </p>
+        </section>
+
+        <!-- Surprise Section -->
+        <section id="surprise-section" class="my-16 p-8 bg-white rounded-lg shadow-md max-w-lg mx-auto text-center cursor-pointer transform hover:scale-105 transition-transform duration-300">
+            <h3 class="text-2xl font-playfair text-charcoal">A Little Surprise for You</h3>
+            <p class="text-gray-600 mt-2 font-lato">Click to reveal a blessing.</p>
+            <blockquote id="blessing" class="hidden text-xl font-playfair italic text-teal mt-4"></blockquote>
+        </section>
+
+
+        <!-- Featured Poems Section -->
+        <section class="my-16">
+            <h2 class="text-3xl font-playfair text-charcoal text-center mb-8">Featured Poems</h2>
+            <div id="featured-poems" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Poems will be dynamically loaded here -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center p-6 mt-12 bg-white shadow-inner">
+        <p class="font-lato text-gray-600">&copy; 2024 Your Name. All Rights Reserved.</p>
+    </footer>
+
+    <script src="app.js"></script>
 </body>
 </html>
