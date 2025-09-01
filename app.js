@@ -1,9 +1,24 @@
 /**
  * Main application logic for the poetry website.
- * This script handles functionality for all pages: Home, Gift, and Admin.
- * Version 2.0: Includes enhanced error handling, UI feedback, and state management.
+ * Version 2.1: Combined config and app logic to prevent race conditions on live servers.
+ * Includes enhanced error handling, UI feedback, and state management.
  */
 document.addEventListener('DOMContentLoaded', () => {
+
+    // --- ‼️ IMPORTANT CONFIGURATION ‼️ ---
+    // This object now lives directly inside app.js.
+    // Edit the values below to match your GitHub repository details.
+    const config = {
+        // Your GitHub username.
+        username: "sankalpvb",
+
+        // The name of the repository where your poems.json is stored.
+        repo: "MyStuf",
+
+        // The branch where your poems.json is stored (usually "main" or "master").
+        branch: "main",
+    };
+    // -----------------------------------------
 
     const GITHUB_API_URL = `https://api.github.com/repos/${config.username}/${config.repo}/contents/poems.json`;
     const POEMS_RAW_URL = `https://raw.githubusercontent.com/${config.username}/${config.repo}/${config.branch}/poems.json`;
@@ -14,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Page-specific initializers ---
     const page = window.location.pathname.split("/").pop();
 
-    if (page === 'index.html' || page === '') {
+    if (page === 'index.html' || page === '' || page === 'MyStuf') {
         initHomePage();
     } else if (page === 'gift.html') {
         initGiftPage();
@@ -23,21 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- DATA FETCHING ---
-
-    /**
-     * Fetches poems from the raw GitHub URL. Clears cache if forced.
-     * @param {boolean} forceRefetch - If true, clears the local cache before fetching.
-     * @returns {Promise<Array>} A promise that resolves to an array of poem objects.
-     */
     async function fetchPoems(forceRefetch = false) {
         if (forceRefetch) {
             allPoems = [];
         }
         if (allPoems.length > 0) {
-            return allPoems; // Return cached poems if available
+            return allPoems;
         }
         try {
-            // Use a cache-busting query parameter to get the latest version
             const response = await fetch(`${POEMS_RAW_URL}?t=${new Date().getTime()}`);
             if (response.status === 404) {
                 console.warn("poems.json not found. It will be created when you save the first poem.");
@@ -50,22 +58,22 @@ document.addEventListener('DOMContentLoaded', () => {
             return allPoems;
         } catch (error) {
             console.error("Error fetching poems:", error);
-            // Display error on relevant pages
             const poemsGrid = document.getElementById('poems-grid');
             if (poemsGrid) {
-                poemsGrid.innerHTML = `<p class="feedback-error">Error: ${error.message}. Please check your configuration and network.</p>`;
+                poemsGrid.innerHTML = `<p class="feedback-error" style="text-align: center;">Error: Could not load poems. Please check the repository configuration at the top of app.js.</p>`;
             }
-            return []; // Return empty array on error
+            return [];
         }
     }
 
 
     // --- HOME PAGE LOGIC ---
-
     function initHomePage() {
         const surpriseSection = document.getElementById('surprise-section');
         const blessingEl = document.getElementById('blessing');
         const placeholderEl = document.getElementById('blessing-placeholder');
+
+        if (!surpriseSection) return;
 
         const blessings = [
             "May your heart be a quiet garden.",
@@ -85,18 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- GIFT PAGE LOGIC ---
-
     async function initGiftPage() {
         await renderPoems();
         await setupFiltering();
     }
     
-    /**
-    * Sanitizes a string by converting HTML special characters to their entity equivalents.
-    * @param {string} str The string to sanitize.
-    * @returns {string} The sanitized string.
-    */
     function sanitizeHTML(str) {
+        if (!str) return "";
         const temp = document.createElement('div');
         temp.textContent = str;
         return temp.innerHTML;
@@ -104,7 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function renderPoems(searchTerm = '', activeTags = []) {
         const poemsGrid = document.getElementById('poems-grid');
-        poemsGrid.innerHTML = '<p>Loading poems...</p>';
+        if (!poemsGrid) return;
+        poemsGrid.innerHTML = '<p style="text-align: center;">Loading poems...</p>';
         const poems = await fetchPoems();
 
         let filteredPoems = poems;
@@ -125,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         poemsGrid.innerHTML = '';
         if (filteredPoems.length === 0) {
-            poemsGrid.innerHTML = '<p>No poems found that match your criteria.</p>';
+            poemsGrid.innerHTML = '<p style="text-align: center;">No poems found that match your criteria.</p>';
         } else {
             filteredPoems.forEach(poem => {
                 const card = document.createElement('div');
@@ -148,12 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
     async function setupFiltering() {
         const searchInput = document.getElementById('search-input');
         const tagFiltersContainer = document.getElementById('tag-filters');
+        if (!searchInput) return;
+
         const poems = await fetchPoems();
 
         const allTags = new Set(poems.flatMap(p => p.tags || []));
         tagFiltersContainer.innerHTML = '<button class="tag-filter active" data-tag="all">All</button>';
         allTags.forEach(tag => {
-            if(!tag) return; // Skip empty tags
+            if(!tag) return;
             const button = document.createElement('button');
             button.className = 'tag-filter';
             button.dataset.tag = tag;
@@ -222,7 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
     // --- ADMIN PAGE LOGIC ---
     function initAdminPage() {
         const unlockBtn = document.getElementById('unlock-btn');
@@ -285,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     async function renderAdminPoemList(token) {
         const listContainer = document.getElementById('existing-poems-list');
-        listContainer.innerHTML = '<p>Loading...</p>';
+        listContainer.innerHTML = '<p>Loading poems...</p>';
         const poems = await fetchPoems(true); // Force refetch
 
         listContainer.innerHTML = '';
@@ -315,12 +320,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const poemId = e.target.dataset.id;
             if (e.target.classList.contains('edit-btn')) {
                 const poem = allPoems.find(p => p.id === poemId);
-                document.getElementById('form-title').textContent = 'Edit Poem';
-                document.getElementById('poem-id').value = poem.id;
-                document.getElementById('title').value = poem.title;
-                document.getElementById('content').value = poem.content;
-                document.getElementById('tags').value = (poem.tags || []).join(', ');
-                window.scrollTo(0,0);
+                if (poem) {
+                    document.getElementById('form-title').textContent = 'Edit Poem';
+                    document.getElementById('poem-id').value = poem.id;
+                    document.getElementById('title').value = poem.title;
+                    document.getElementById('content').value = poem.content;
+                    document.getElementById('tags').value = (poem.tags || []).join(', ');
+                    window.scrollTo(0,0);
+                }
             }
             if (e.target.classList.contains('delete-btn')) {
                 if (confirm('Are you sure you want to delete this poem?')) {
@@ -332,6 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showFeedback(message, isError = false) {
         const feedbackEl = document.getElementById('feedback-message');
+        if (!feedbackEl) return;
         feedbackEl.textContent = message;
         feedbackEl.className = 'feedback-message';
         feedbackEl.classList.add(isError ? 'feedback-error' : 'feedback-success');
@@ -345,6 +353,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function setFormBusy(isBusy) {
         const saveButton = document.querySelector('#poem-form button[type="submit"]');
         const clearButton = document.getElementById('clear-form-btn');
+        if (!saveButton) return;
+        
         if (isBusy) {
             saveButton.disabled = true;
             saveButton.textContent = 'Saving...';
@@ -357,7 +367,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- GITHUB API LOGIC ---
-
     async function commitPoemsToGitHub(poemsData, token, commitMessage) {
         setFormBusy(true);
         try {
@@ -385,9 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(`GitHub commit failed: ${errorData.message}`);
             }
             
-            // Wait 2 seconds for GitHub's raw content CDN to update before re-fetching
             await new Promise(resolve => setTimeout(resolve, 2000));
-            
             return true;
         } catch (error) {
             console.error("Error committing to GitHub:", error);
