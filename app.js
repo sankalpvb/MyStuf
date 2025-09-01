@@ -1,13 +1,14 @@
 /**
  * Main application logic for the poetry website.
  * This script handles functionality for all pages: Home, Gift, and Admin.
+ * Version 2.0: Includes enhanced error handling, UI feedback, and state management.
  */
 document.addEventListener('DOMContentLoaded', () => {
 
     const GITHUB_API_URL = `https://api.github.com/repos/${config.username}/${config.repo}/contents/poems.json`;
     const POEMS_RAW_URL = `https://raw.githubusercontent.com/${config.username}/${config.repo}/${config.branch}/poems.json`;
 
-    // Global state to hold poems and avoid re-fetching
+    // Global state to hold poems and avoid re-fetching within a single page load
     let allPoems = [];
 
     // --- Page-specific initializers ---
@@ -24,27 +25,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DATA FETCHING ---
 
     /**
-     * Fetches poems from the raw GitHub URL to ensure we always get the latest version.
+     * Fetches poems from the raw GitHub URL. Clears cache if forced.
+     * @param {boolean} forceRefetch - If true, clears the local cache before fetching.
      * @returns {Promise<Array>} A promise that resolves to an array of poem objects.
      */
-    async function fetchPoems() {
+    async function fetchPoems(forceRefetch = false) {
+        if (forceRefetch) {
+            allPoems = [];
+        }
         if (allPoems.length > 0) {
             return allPoems; // Return cached poems if available
         }
         try {
-            // Use a cache-busting query parameter
+            // Use a cache-busting query parameter to get the latest version
             const response = await fetch(`${POEMS_RAW_URL}?t=${new Date().getTime()}`);
             if (response.status === 404) {
                 console.warn("poems.json not found. It will be created when you save the first poem.");
                 return [];
             }
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`Could not load poems. Status: ${response.status}`);
             }
             allPoems = await response.json();
             return allPoems;
         } catch (error) {
             console.error("Error fetching poems:", error);
+            // Display error on relevant pages
+            const poemsGrid = document.getElementById('poems-grid');
+            if (poemsGrid) {
+                poemsGrid.innerHTML = `<p class="feedback-error">Error: ${error.message}. Please check your configuration and network.</p>`;
+            }
             return []; // Return empty array on error
         }
     }
@@ -78,14 +88,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function initGiftPage() {
         await renderPoems();
-        setupFiltering();
+        await setupFiltering();
+    }
+    
+    /**
+    * Sanitizes a string by converting HTML special characters to their entity equivalents.
+    * @param {string} str The string to sanitize.
+    * @returns {string} The sanitized string.
+    */
+    function sanitizeHTML(str) {
+        const temp = document.createElement('div');
+        temp.textContent = str;
+        return temp.innerHTML;
     }
 
-    /**
-     * Renders poems to the grid, optionally filtered by a search term and active tags.
-     * @param {string} searchTerm - Text to filter poems by title or content.
-     * @param {string[]} activeTags - An array of tags to filter poems by.
-     */
     async function renderPoems(searchTerm = '', activeTags = []) {
         const poemsGrid = document.getElementById('poems-grid');
         poemsGrid.innerHTML = '<p>Loading poems...</p>';
@@ -93,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let filteredPoems = poems;
 
-        // Apply search filter
         if (searchTerm) {
             const lowerCaseSearch = searchTerm.toLowerCase();
             filteredPoems = filteredPoems.filter(poem =>
@@ -102,10 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
             );
         }
 
-        // Apply tag filter
         if (activeTags.length > 0) {
             filteredPoems = filteredPoems.filter(poem =>
-                activeTags.every(tag => poem.tags.includes(tag))
+                poem.tags && activeTags.every(tag => poem.tags.includes(tag))
             );
         }
 
@@ -116,11 +130,10 @@ document.addEventListener('DOMContentLoaded', () => {
             filteredPoems.forEach(poem => {
                 const card = document.createElement('div');
                 card.className = 'poem-card';
-                // Create a snippet without cutting words
                 const snippet = poem.content.split(' ').slice(0, 15).join(' ') + '...';
                 card.innerHTML = `
-                    <h3 class="poem-title">${poem.title}</h3>
-                    <p class="poem-snippet">${snippet}</p>
+                    <h3 class="poem-title">${sanitizeHTML(poem.title)}</h3>
+                    <p class="poem-snippet">${sanitizeHTML(snippet)}</p>
                     <a href="#" class="read-more-btn" data-id="${poem.id}">Read More</a>
                 `;
                 card.querySelector('.read-more-btn').addEventListener('click', (e) => {
@@ -132,18 +145,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * Sets up search and tag filtering functionality.
-     */
     async function setupFiltering() {
         const searchInput = document.getElementById('search-input');
         const tagFiltersContainer = document.getElementById('tag-filters');
         const poems = await fetchPoems();
 
-        // Create tag filter buttons
         const allTags = new Set(poems.flatMap(p => p.tags || []));
         tagFiltersContainer.innerHTML = '<button class="tag-filter active" data-tag="all">All</button>';
         allTags.forEach(tag => {
+            if(!tag) return; // Skip empty tags
             const button = document.createElement('button');
             button.className = 'tag-filter';
             button.dataset.tag = tag;
@@ -151,12 +161,10 @@ document.addEventListener('DOMContentLoaded', () => {
             tagFiltersContainer.appendChild(button);
         });
 
-        // Event listener for search and tags
         const applyFilters = () => {
             const searchTerm = searchInput.value;
             const activeTagEls = tagFiltersContainer.querySelectorAll('.tag-filter.active');
             let activeTags = Array.from(activeTagEls).map(el => el.dataset.tag);
-            // If "All" is selected, treat as no tag filter
             if (activeTags.includes('all')) {
                 activeTags = [];
             }
@@ -169,16 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.classList.contains('tag-filter')) {
                 const clickedTag = e.target.dataset.tag;
                 if (clickedTag === 'all') {
-                    // If "All" is clicked, deactivate others and activate "All"
                     tagFiltersContainer.querySelectorAll('.tag-filter').forEach(btn => btn.classList.remove('active'));
                     e.target.classList.add('active');
                 } else {
-                    // Deactivate "All" if another tag is clicked
                     tagFiltersContainer.querySelector('[data-tag="all"]').classList.remove('active');
-                    // Toggle the clicked tag's active state
                     e.target.classList.toggle('active');
                 }
-                // If no tags are active, activate "All"
                 if (tagFiltersContainer.querySelectorAll('.tag-filter.active').length === 0) {
                     tagFiltersContainer.querySelector('[data-tag="all"]').classList.add('active');
                 }
@@ -187,14 +191,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODAL LOGIC ---
     function openPoemModal(poemId) {
         const poem = allPoems.find(p => p.id.toString() === poemId.toString());
         if (!poem) return;
 
         document.getElementById('modal-title').textContent = poem.title;
         document.getElementById('modal-date').textContent = new Date(poem.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        document.getElementById('modal-content').innerHTML = poem.content.replace(/\n/g, '<br>');
+        document.getElementById('modal-content').innerHTML = sanitizeHTML(poem.content).replace(/\n/g, '<br>');
         
         const tagsContainer = document.getElementById('modal-tags');
         tagsContainer.innerHTML = '';
@@ -210,7 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('poem-modal').classList.remove('hidden');
     }
 
-    // Close modal logic
     const modal = document.getElementById('poem-modal');
     if (modal) {
         modal.addEventListener('click', (e) => {
@@ -234,11 +236,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 loadAdminData(token);
             } else {
-                alert('Please enter a token.');
+                showFeedback("Please enter a token.", true);
             }
         });
 
-        // Check if token already exists in session storage
         const storedToken = sessionStorage.getItem('github_token');
         if (storedToken) {
             tokenInput.value = storedToken;
@@ -266,12 +267,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 date: new Date().toISOString()
             };
             
-            // If editing, use the original date
             if(id) {
                 const originalPoem = allPoems.find(p => p.id === id);
                 if (originalPoem) newPoem.date = originalPoem.date;
             }
-
             await savePoem(newPoem, token);
         });
         
@@ -287,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function renderAdminPoemList(token) {
         const listContainer = document.getElementById('existing-poems-list');
         listContainer.innerHTML = '<p>Loading...</p>';
-        const poems = await fetchPoems();
+        const poems = await fetchPoems(true); // Force refetch
 
         listContainer.innerHTML = '';
         if (poems.length === 0) {
@@ -300,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
             item.className = 'existing-poem-item';
             item.innerHTML = `
                 <div>
-                    <strong>${poem.title}</strong>
+                    <strong>${sanitizeHTML(poem.title)}</strong>
                     <br>
                     <small>${new Date(poem.date).toLocaleDateString()}</small>
                 </div>
@@ -312,7 +311,6 @@ document.addEventListener('DOMContentLoaded', () => {
             listContainer.appendChild(item);
         });
 
-        // Add event listeners for edit/delete buttons
         listContainer.addEventListener('click', async (e) => {
             const poemId = e.target.dataset.id;
             if (e.target.classList.contains('edit-btn')) {
@@ -332,15 +330,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Shows a feedback message to the user in the admin panel.
-     * @param {string} message - The text to display.
-     * @param {boolean} isError - If true, styles the message as an error.
-     */
     function showFeedback(message, isError = false) {
         const feedbackEl = document.getElementById('feedback-message');
         feedbackEl.textContent = message;
-        feedbackEl.className = 'feedback-message'; // Reset classes
+        feedbackEl.className = 'feedback-message';
         feedbackEl.classList.add(isError ? 'feedback-error' : 'feedback-success');
         feedbackEl.classList.remove('hidden');
 
@@ -349,48 +342,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     }
 
+    function setFormBusy(isBusy) {
+        const saveButton = document.querySelector('#poem-form button[type="submit"]');
+        const clearButton = document.getElementById('clear-form-btn');
+        if (isBusy) {
+            saveButton.disabled = true;
+            saveButton.textContent = 'Saving...';
+            clearButton.disabled = true;
+        } else {
+            saveButton.disabled = false;
+            saveButton.textContent = 'Save Poem';
+            clearButton.disabled = false;
+        }
+    }
+
     // --- GITHUB API LOGIC ---
 
-    /**
-     * Commits updated poem data to the GitHub repository.
-     * @param {Array} poemsData - The full array of poem objects to save.
-     * @param {string} token - The user's GitHub Personal Access Token.
-     * @param {string} commitMessage - The message for the GitHub commit.
-     * @returns {Promise<boolean>} True on success, false on failure.
-     */
     async function commitPoemsToGitHub(poemsData, token, commitMessage) {
+        setFormBusy(true);
         try {
-            // Step 1: Get the latest SHA of the file
-            const fileResponse = await fetch(GITHUB_API_URL, {
-                headers: { 'Authorization': `token ${token}` }
-            });
+            const fileResponse = await fetch(GITHUB_API_URL, { headers: { 'Authorization': `token ${token}` } });
             if (!fileResponse.ok && fileResponse.status !== 404) {
-                 throw new Error(`GitHub API error getting file SHA: ${fileResponse.statusText}`);
+                 throw new Error(`GitHub API (SHA fetch): ${fileResponse.statusText}`);
             }
             const fileData = fileResponse.status === 404 ? {} : await fileResponse.json();
             const sha = fileData.sha;
 
-            // Step 2: Prepare the content and commit body
             const content = JSON.stringify(poemsData, null, 2);
-            // Base64 encode the content
             const encodedContent = btoa(unescape(encodeURIComponent(content)));
 
-            const body = {
-                message: commitMessage,
-                content: encodedContent,
-                branch: config.branch,
-            };
-            if (sha) {
-                body.sha = sha; // Include SHA if the file exists to update it
-            }
+            const body = { message: commitMessage, content: encodedContent, branch: config.branch };
+            if (sha) body.sha = sha;
 
-            // Step 3: Make the PUT request to update/create the file
             const commitResponse = await fetch(GITHUB_API_URL, {
                 method: 'PUT',
-                headers: {
-                    'Authorization': `token ${token}`,
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
             });
 
@@ -399,13 +385,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(`GitHub commit failed: ${errorData.message}`);
             }
             
-            // Clear local cache to force a re-fetch of the new data
-            allPoems = [];
+            // Wait 2 seconds for GitHub's raw content CDN to update before re-fetching
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
             return true;
         } catch (error) {
             console.error("Error committing to GitHub:", error);
             showFeedback(error.message, true);
             return false;
+        } finally {
+            setFormBusy(false);
         }
     }
     
@@ -415,11 +404,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let commitMessage;
         if (existingIndex > -1) {
-            // Update existing poem
             poems[existingIndex] = poemData;
             commitMessage = `Update poem: ${poemData.title}`;
         } else {
-            // Add new poem to the beginning of the array
             poems.unshift(poemData);
             commitMessage = `Add new poem: ${poemData.title}`;
         }
@@ -435,6 +422,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function deletePoem(poemId, token) {
         let poems = await fetchPoems();
         const poemToDelete = poems.find(p => p.id === poemId);
+        if (!poemToDelete) return;
+
         const updatedPoems = poems.filter(p => p.id !== poemId);
         
         const commitMessage = `Delete poem: ${poemToDelete.title}`;
