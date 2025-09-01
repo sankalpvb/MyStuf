@@ -1,39 +1,70 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css');
+
+/* Custom Base Styles */
+:root {
+    --cream: #FDFBF5;
+    --charcoal: #333333;
+    --teal: #5E8B7E;
+    --light-gray: #f4f4f4;
+}
+
 body {
-  font-family: 'Arial', sans-serif;
-  background: #f8f8f8;
-  margin: 0;
-  padding: 0;
+    font-family: 'Lato', sans-serif;
+    color: var(--charcoal);
 }
-header {
-  background: #222;
-  color: white;
-  text-align: center;
-  padding: 1rem;
+
+.bg-cream {
+    background-color: var(--cream);
 }
-main {
-  max-width: 800px;
-  margin: auto;
-  padding: 1rem;
+
+.text-charcoal {
+    color: var(--charcoal);
 }
+
+.text-teal {
+    color: var(--teal);
+}
+
+.font-playfair {
+    font-family: 'Playfair Display', serif;
+}
+
+.font-lato {
+    font-family: 'Lato', sans-serif;
+}
+
+/* Navigation */
+.nav-link {
+    @apply mx-3 text-lg text-gray-600 hover:text-teal transition-colors duration-300 font-lato;
+}
+
+/* Poem Card Styling */
 .poem-card {
-  background: white;
-  padding: 1rem;
-  border-radius: 12px;
-  margin: 1rem 0;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    @apply bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300;
 }
-textarea, input, button {
-  width: 100%;
-  margin: 0.5rem 0;
-  padding: 0.7rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+
+.poem-title {
+    @apply text-2xl font-playfair text-charcoal mb-2;
 }
-button {
-  background: #222;
-  color: white;
-  cursor: pointer;
+
+.poem-date {
+    @apply text-sm text-gray-500 font-lato mb-4;
 }
-@media (max-width: 600px) {
-  .poem-card { font-size: 0.9rem; }
+
+.poem-content {
+    @apply text-gray-700 font-lato leading-relaxed whitespace-pre-line;
+}
+
+
+/* Admin Panel Form Styling */
+.form-input {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal transition-shadow duration-300;
+}
+
+.btn-primary {
+    @apply bg-teal text-white font-bold py-2 px-6 rounded-lg hover:bg-opacity-90 transition-colors duration-300 shadow-md;
+}
+
+.btn-secondary {
+    @apply bg-gray-300 text-charcoal font-bold py-2 px-6 rounded-lg hover:bg-gray-400 transition-colors duration-300 shadow-md;
 }
