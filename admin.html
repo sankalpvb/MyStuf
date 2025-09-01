@@ -1,52 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <h1>📝 Add a New Poem</h1>
-  <input type="text" id="title" placeholder="Poem Title"><br><br>
-  <textarea id="content" placeholder="Poem Content"></textarea><br><br>
-  <button onclick="addPoem()">Add Poem</button>
+<body class="bg-gray-100">
 
-  <script>
-    const token = "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"; 
-    const repoOwner = "sankalpvb";
-    const repoName = "MyStuf";
-    const filePath = "poems.json";
+    <header class="text-center p-8 bg-white shadow-md">
+        <h1 class="text-3xl text-charcoal font-lato font-bold">Poetry Admin Panel</h1>
+         <nav class="mt-4">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="gift.html" class="nav-link">Gift Section</a>
+        </nav>
+    </header>
 
-    async function addPoem() {
-      const title = document.getElementById("title").value.trim();
-      const content = document.getElementById("content").value.trim();
-      if (!title || !content) return alert("Please fill all fields!");
+    <main class="container mx-auto p-4 md:p-8">
 
-      // Get existing poems
-      const res = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`);
-      const fileData = await res.json();
-      const poems = JSON.parse(atob(fileData.content));
+        <!-- Login Section -->
+        <section id="login-section" class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold text-charcoal mb-6 text-center">Admin Login</h2>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label for="username" class="block text-gray-700 font-bold mb-2">GitHub Username</label>
+                    <input type="text" id="username" class="form-input" required>
+                </div>
+                <div class="mb-4">
+                    <label for="repo" class="block text-gray-700 font-bold mb-2">GitHub Repository</label>
+                    <input type="text" id="repo" class="form-input" placeholder="e.g., my-poetry-project" required>
+                </div>
+                <div class="mb-6">
+                    <label for="token" class="block text-gray-700 font-bold mb-2">GitHub Personal Access Token</label>
+                    <input type="password" id="token" class="form-input" required>
+                </div>
+                <button type="submit" class="btn-primary w-full">Login</button>
+            </form>
+             <p id="login-message" class="text-center text-red-500 mt-4"></p>
+        </section>
 
-      // Add new poem
-      poems.push({ title, content });
+        <!-- Admin Dashboard (Hidden by default) -->
+        <section id="admin-dashboard" class="hidden mt-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-charcoal">Manage Poems</h2>
+                <button id="logout-btn" class="btn-secondary">Logout</button>
+            </div>
+            
+            <!-- Poem Form -->
+            <form id="poem-form" class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <input type="hidden" id="poem-id">
+                <h3 id="form-title" class="text-xl font-bold text-charcoal mb-4">Add a New Poem</h3>
+                <div class="mb-4">
+                    <label for="title" class="block text-gray-700 font-bold mb-2">Title</label>
+                    <input type="text" id="title" class="form-input" required>
+                </div>
+                <div class="mb-4">
+                    <label for="date" class="block text-gray-700 font-bold mb-2">Date</label>
+                    <input type="date" id="date" class="form-input" required>
+                </div>
+                <div class="mb-6">
+                    <label for="content" class="block text-gray-700 font-bold mb-2">Content (use &lt;br&gt; for line breaks)</label>
+                    <textarea id="content" rows="10" class="form-input" required></textarea>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button type="submit" id="save-btn" class="btn-primary">Save Poem</button>
+                    <button type="button" id="clear-btn" class="btn-secondary">Clear Form</button>
+                </div>
+            </form>
 
-      // Update file
-      const updatedContent = btoa(JSON.stringify(poems, null, 2));
-      await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `token ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message: "Add new poem",
-          content: updatedContent,
-          sha: fileData.sha
-        })
-      });
+            <p id="commit-message" class="text-center my-4"></p>
 
-      alert("Poem added successfully!");
-    }
-  </script>
+            <!-- Poem List -->
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h3 class="text-xl font-bold text-charcoal mb-4">Existing Poems</h3>
+                <div id="poem-list" class="space-y-4">
+                    <!-- Admin poem list will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
 </body>
 </html>
