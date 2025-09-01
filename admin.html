@@ -25,11 +25,16 @@
             <form id="login-form">
                 <div class="mb-4">
                     <label for="username" class="block text-gray-700 font-bold mb-2">GitHub Username</label>
-                    <input type="text" id="username" class="form-input" required>
+                    <input type="text" id="username" class="form-input" required placeholder="e.g., your-github-name">
                 </div>
                 <div class="mb-4">
                     <label for="repo" class="block text-gray-700 font-bold mb-2">GitHub Repository</label>
-                    <input type="text" id="repo" class="form-input" placeholder="e.g., my-poetry-project" required>
+                    <input type="text" id="repo" class="form-input" required placeholder="e.g., my-poetry-project">
+                </div>
+                <!-- NEW: Branch Name input -->
+                <div class="mb-4">
+                    <label for="branch" class="block text-gray-700 font-bold mb-2">Branch Name</label>
+                    <input type="text" id="branch" class="form-input" required value="main">
                 </div>
                 <div class="mb-6">
                     <label for="token" class="block text-gray-700 font-bold mb-2">GitHub Personal Access Token</label>
@@ -85,3 +90,4 @@
     <script src="app.js"></script>
 </body>
 </html>
+
