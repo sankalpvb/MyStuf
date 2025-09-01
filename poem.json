@@ -1,10 +1,20 @@
 [
   {
-    "title": "First Poem",
-    "content": "Your first beautiful poem goes here."
+    "id": "1672531200000",
+    "title": "The Silent Bloom",
+    "date": "2024-01-01",
+    "content": "In fields of green, a silent bloom,<br>Awaits the sun to chase the gloom.<br>With petals soft and colors bright,<br>It dances in the morning light."
   },
   {
-    "title": "Second Poem",
-    "content": "Another masterpiece."
+    "id": "1675209600000",
+    "title": "Ocean's Whisper",
+    "date": "2024-02-01",
+    "content": "The ocean whispers to the shore,<br>Of tales and treasures evermore.<br>With every crash and gentle sigh,<br>It sings a timeless lullaby."
+  },
+  {
+    "id": "1677628800000",
+    "title": "Starlit Path",
+    "date": "2024-03-01",
+    "content": "A path of stars across the sky,<br>Where dreams take flight and spirits fly.<br>In cosmic dust and silver gleam,<br>We find the essence of a dream."
   }
 ]
