@@ -4,56 +4,249 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-    <link rel="stylesheet" href="style.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Self-contained styles for the admin panel -->
+    <style>
+        :root {
+            --bg-color: #f7f8fa;
+            --card-bg: #ffffff;
+            --primary-color: #4a69bd;
+            --primary-color-hover: #5a7edc;
+            --text-color-primary: #2d3748;
+            --text-color-secondary: #718096;
+            --border-color: #e2e8f0;
+            --red: #e53e3e;
+            --green: #38a169;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color-primary);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .hidden { display: none; }
+        .container { width: 100%; max-width: 1200px; } /* Increased max-width for side-by-side layout */
+        .card { 
+            background: var(--card-bg);
+            border-radius: 12px; 
+            padding: 2.5rem; 
+            box-shadow: var(--shadow); 
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+        h1, h2 { font-weight: 700; text-align: center; margin-bottom: 2rem; letter-spacing: -0.5px; }
+        h1 { font-size: 2.25rem; }
+        h2 { font-size: 1.5rem; color: var(--text-color-primary); }
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: var(--text-color-secondary); }
+        input[type="text"], input[type="password"], textarea {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background-color: #fff;
+        }
+        input:focus, textarea:focus { 
+            outline: none; 
+            box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.3); 
+            border-color: var(--primary-color); 
+        }
+        textarea { min-height: 200px; resize: vertical; }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .btn-primary { 
+            background-color: var(--primary-color); 
+            color: white; 
+            width: 100%; 
+            box-shadow: 0 4px 15px rgba(74, 105, 189, 0.2);
+        }
+        .btn-primary:hover { 
+            background-color: var(--primary-color-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 105, 189, 0.3);
+        }
+        .btn-secondary { background-color: #ecf0f1; color: var(--text-color-primary); }
+        .btn-secondary:hover { background-color: #dfe6e9; }
+        .btn-danger { background-color: var(--red); color: white; }
+        .btn-danger:hover { opacity: 0.9; }
+        #login-error { color: var(--red); text-align: center; margin-top: 1rem; font-weight: 600; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 0 0.5rem; }
+        
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            align-items: flex-start;
+        }
+        .dashboard-layout .card {
+            margin-bottom: 0;
+        }
+        #login-section { max-width: 500px; margin: 2rem auto 0; }
+
+        .existing-poem-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 1.25rem 0.5rem; 
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s ease;
+        }
+        .existing-poem-item:hover { background-color: #fafbfd; }
+        .existing-poem-item:last-child { border-bottom: none; }
+        .poem-item-info strong {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .poem-item-info p {
+            font-size: 0.85rem;
+            color: var(--text-color-secondary);
+        }
+        .poem-item-actions { display: flex; gap: 0.75rem; }
+        
+        /* ✨ EDITED BUTTON STYLES START HERE ✨ */
+        .poem-item-actions button {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px; /* Pill shape */
+            cursor: pointer;
+            border: 1px solid;
+            background-color: transparent;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .edit-btn {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .edit-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .delete-btn {
+            border-color: var(--text-color-secondary);
+            color: var(--text-color-secondary);
+        }
+        .delete-btn:hover {
+            background-color: var(--text-color-secondary);
+            color: white;
+        }
+        /* ✨ EDITED BUTTON STYLES END HERE ✨ */
+
+        .form-actions { display: flex; gap: 1rem; }
+        
+        @media (max-width: 900px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-layout .card {
+                margin-bottom: 2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .card { padding: 1.5rem; }
+            h1 { font-size: 1.75rem; }
+            .dashboard-header { flex-direction: column; gap: 1rem; }
+        }
+    </style>
 </head>
-<body class="admin-body">
-
-    <!-- Login Section -->
-    <div id="login-section" class="admin-container">
-        <div class="admin-card login-card">
-            <h1 class="admin-h1">Admin Login</h1>
-            <p class="admin-subtext">Enter credentials to manage poems.</p>
-            <form id="login-form" class="admin-form">
-                <input type="text" id="username" placeholder="Username" class="admin-input" required>
-                <input type="password" id="password" placeholder="Password" class="admin-input" required>
-                <input type="password" id="github-token" placeholder="GitHub Personal Access Token" class="admin-input" required>
-                <button type="submit" class="admin-button primary">Login</button>
+<body>
+    <div class="container">
+        <!-- Login Section -->
+        <section id="login-section" class="card">
+            <h1>Admin Login</h1>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required autocomplete="current-password">
+                </div>
+                <div class="form-group">
+                    <label for="github-token">GitHub Personal Access Token</label>
+                    <input type="password" id="github-token" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p id="login-error"></p>
             </form>
-            <p id="login-error" class="admin-error-text"></p>
-        </div>
-    </div>
+        </section>
 
-    <!-- Admin Dashboard -->
-    <div id="dashboard" class="admin-dashboard-container hidden">
-        <header class="admin-header">
-            <h1 class="admin-h1">Poem Dashboard</h1>
-            <button id="logout-btn" class="admin-button danger">Logout</button>
-        </header>
-
-        <div class="admin-main-content">
-            <div class="admin-card">
-                <h2 id="form-title" class="admin-h2">Add New Poem</h2>
-                <form id="poem-form" class="admin-form">
-                    <input type="hidden" id="poem-id">
-                    <input type="text" id="title" placeholder="Poem Title" class="admin-input" required>
-                    <textarea id="content" placeholder="Poem Content..." rows="8" class="admin-input" required></textarea>
-                    <input type="text" id="tags" placeholder="Tags (comma-separated)" class="admin-input">
-                    <div class="admin-form-actions">
-                        <button type="submit" id="save-btn" class="admin-button success">Save Poem</button>
-                        <button type="button" id="clear-btn" class="admin-button secondary">Clear</button>
-                    </div>
-                </form>
+        <!-- Admin Dashboard (hidden by default) -->
+        <section id="dashboard" class="hidden">
+            <div class="dashboard-header">
+                <h1>Admin Dashboard</h1>
+                <button id="logout-btn" class="btn btn-danger">
+                    <span>Logout</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                </button>
             </div>
+            
+            <div class="dashboard-layout">
+                <div class="card">
+                    <h2 id="form-title">Add New Poem</h2>
+                    <form id="poem-form">
+                        <input type="hidden" id="poem-id">
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" id="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tags">Tags (comma-separated)</label>
+                            <input type="text" id="tags">
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Content</label>
+                            <textarea id="content" required></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="save-btn" class="btn btn-primary">Save Poem</button>
+                            <button type="button" id="clear-btn" class="btn btn-secondary">Clear</button>
+                        </div>
+                    </form>
+                </div>
 
-            <div class="admin-card">
-                <h2 class="admin-h2">Existing Poems</h2>
-                <div id="poems-list" class="admin-poem-list">
-                    <!-- Admin poem list will be loaded here -->
+                <div class="card">
+                    <h2>Existing Poems</h2>
+                    <div id="poems-list">
+                        <!-- Poems will be loaded here by script.js -->
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
-    
+
     <script src="script.js"></script>
 </body>
 </html>
