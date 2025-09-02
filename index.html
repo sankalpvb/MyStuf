@@ -17,6 +17,20 @@
     
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- ✨ New styles for the personal note ✨ -->
+    <style>
+        .personal-note {
+            text-align: center;
+            font-style: italic;
+            color: var(--accent-color); /* Uses the theme's accent color for consistency */
+            opacity: 0.9;
+            margin-top: -0.75rem; /* Pulls it a bit closer to the main title */
+            margin-bottom: 2.5rem; /* Ensures space before the tag filters */
+            font-size: 1rem;
+            padding: 0 1rem;
+        }
+    </style>
 </head>
 
 <!-- The theme class will be added by JS -->
@@ -43,6 +57,8 @@
         <section class="poems-section">
             <h1 class="section-title">A Collection of Poems</h1>
             
+            <!-- ✨ Here is the new line of text ✨ -->
+            <p class="personal-note">A personal collection of thoughts and moments, shared with you.</p>
 
             <div id="tag-filters" class="tag-filters">
                 <!-- Tag buttons will be dynamically loaded here -->
@@ -59,6 +75,7 @@
             <div id="infinite-scroll-trigger"></div>
             
         </section>
+        <!-- The 'last-updated' element is now populated by script.js -->
         <p id="last-updated" class="section-subtitle"></p>
     </main>
 
