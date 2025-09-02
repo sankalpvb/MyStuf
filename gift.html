@@ -1,52 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Gift For You!</title>
-
-    <!-- Google Fonts -->
+    <title>A Special Gift For You</title>
+    
+    <!-- Google Fonts for this page -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="style.css">
+    <!-- ✨ Styles for this page are now included directly below ✨ -->
+    <style>
+        /* Base styles for this page */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            overflow: hidden;
+            position: relative;
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+        }
+
+        /* Particle container and animation */
+        #particle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 25s infinite ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(110vh) scale(1); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(0.5); opacity: 0; }
+        }
+
+        /* Main gift card styling */
+        .gift-container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .gift-card {
+            background: rgba(255, 255, 255, 0.2); /* Slightly more opaque for better contrast */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: clamp(30px, 6vw, 40px) clamp(25px, 6vw, 50px);
+            max-width: 600px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+        }
+        
+        .gift-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 6vw, 3rem);
+            color: white;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.25); /* Stronger shadow for readability */
+            margin-bottom: 20px;
+        }
+        
+        .gift-message {
+            font-size: clamp(1.1rem, 3vw, 1.25rem); /* Adjusted for better mobile reading */
+            color: #0e0101d2;
+            line-height: 1.7; /* Increased line height */
+            margin-bottom: 25px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Added subtle shadow */
+        }
+        
+        /* New class for the final closing message */
+        .gift-closing {
+            font-size: 1rem;
+            color: rgba(16, 1, 1, 0.933);
+            margin-top: 30px;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        
+        .back-home-button {
+            display: inline-block;
+            margin-top: 30px;
+            background: white;
+            color: #ff9a9e;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .back-home-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+    </style>
 </head>
+<body>
 
-<body class="gift-page-body">
-
-    <!-- Particle Container -->
     <div id="particle-container"></div>
 
-    <!-- Birthday Gift Section -->
-    <div class="gift-section">
-        <div class="gift-content">
-            <h1 class="gift-title">
-                A Special Note
-            </h1>
-            <p class="gift-subtitle">
-                On this special day, I wanted to give you something that lasts far longer than any material
-                gift—something that reflects a part of me, my thoughts, and my journey. This website is my small way of
-                saying you matter, and this is my gift to you.
+    <div class="gift-container">
+        <div class="gift-card">
+            <h1 class="gift-title">A Special Note</h1>
+            <p class="gift-message">"In a world of temporary things, you are a perpetual feeling."</p>
+            <p class="gift-message">
+                On this special day, I wanted to give you something that lasts far longer than any material gift—something that reflects a part of me, my thoughts, and my journey. This website is my small way of saying you matter, and this is my gift to you.
             </p>
-            <p class="gift-subtitle">
-                Wishing you endless happiness, laughter that fills your heart, and dreams that unfold beautifully, just
-                like you deserve. May today be the start of another year filled with love, growth, and beautiful
-                memories.
+            <p class="gift-message">
+                Wishing you endless happiness, laughter that fills your heart, and dreams that unfold beautifully, just like you deserve. May today be the start of another year filled with love, growth, and beautiful memories.
             </p>
-            <p class="gift-subtitle"></p>
-            Happy Birthday!
-            This gift is from the heart—something I created, not bought, because you are truly priceless.
+            <p class="gift-closing">
+                Happy Birthday!<br>
+                This gift is from the heart—something I created, not bought, because you are truly priceless.
             </p>
-            <a href="index.html" class="back-to-home-btn">
-                ← My Poems
-            </a>
         </div>
+        <a href="index.html" class="back-home-button">← My Poems as a Gift</a>
     </div>
 
+    <!-- The script that powers the particle animations -->
     <script src="script.js"></script>
 </body>
-
 </html>
+
