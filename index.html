@@ -14,12 +14,12 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     
     <!-- Custom Styles -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-cream">
+<body class="theme-light"> <!-- Default theme class -->
 
     <!-- Header & Navigation -->
     <header id="main-header" class="main-header">
@@ -50,20 +50,35 @@
                 <p id="last-updated" class="section-subtitle"></p>
             </div>
             
-            <!-- Search & Filter Controls -->
+            <!-- Controls: Search, Filters, Theme Toggle -->
             <div class="controls-container">
                 <div class="search-container">
                     <input type="search" id="search-bar" placeholder="Search for a poem..." class="search-bar">
                 </div>
-                <div id="tag-filters" class="tag-filters">
-                    <!-- Tag filter buttons will be dynamically loaded here -->
+                <div class="utility-controls">
+                    <button id="view-favorites-btn" class="utility-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                        <span id="favorites-count">0</span>
+                    </button>
+                    <div class="theme-switch-wrapper">
+                        <label class="theme-switch" for="theme-checkbox">
+                            <input type="checkbox" id="theme-checkbox" />
+                            <div class="slider round"></div>
+                        </label>
+                    </div>
                 </div>
+            </div>
+            <div id="tag-filters" class="tag-filters">
+                <!-- Tag filter buttons will be dynamically loaded here -->
             </div>
 
             <!-- Poems Grid -->
             <div id="poems-grid" class="poems-grid">
                 <!-- Poems will be dynamically loaded here -->
             </div>
+            
+            <!-- Intersection Observer trigger for infinite scroll -->
+            <div id="infinite-scroll-trigger" style="height: 50px;"></div>
         </div>
     </main>
 
