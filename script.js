@@ -23,11 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const GITHUB_API_BASE_URL = `https://api.github.com/repos/${config.githubUsername}/${config.githubRepo}/contents/`;
     const POEMS_RAW_URL = `https://raw.githubusercontent.com/${config.githubUsername}/${config.githubRepo}/${config.githubBranch}/${config.poemsFilePath}`;
 
-    // --- PAGE ROUTER (UNCHANGED) ---
+    // --- PAGE ROUTER ---
     const page = window.location.pathname.split("/").pop();
-    if (page === 'index.html' || page === '' || page === 'MyStuf') { initIndexPage(); }
-    else if (page === 'gift.html') { /* Assumes gift page has its own simple script or none */ }
-    else if (page === 'admin.html') { initAdminPage(); }
+    if (page === 'index.html' || page === '' || page === 'MyStuf') { 
+        initIndexPage(); 
+    } else if (page === 'gift.html') {
+        initGiftPage();
+    } else if (page === 'admin.html') { 
+        initAdminPage(); 
+    }
 
     // --- INITIALIZATION ---
     function initIndexPage() {
@@ -39,10 +43,27 @@ document.addEventListener('DOMContentLoaded', () => {
         setupFavorites();
         setupInfiniteScroll();
     }
+    
+    function initGiftPage() {
+        const container = document.getElementById('particle-container');
+        if (!container) return;
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const size = Math.random() * 15 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.animationDelay = `${Math.random() * 25}s`;
+            container.appendChild(particle);
+        }
+    }
 
     // --- ✨ NEW & ENHANCED UI FUNCTIONS ✨ ---
     function setupThemeToggle() {
         const checkbox = document.getElementById('theme-checkbox');
+        if(!checkbox) return;
+        
         const currentTheme = localStorage.getItem('theme') || 'light';
         document.body.className = `theme-${currentTheme}`;
         if (currentTheme === 'dark') checkbox.checked = true;
@@ -57,12 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupFavorites() {
         const viewFavoritesBtn = document.getElementById('view-favorites-btn');
         const favoritesCountEl = document.getElementById('favorites-count');
+        if(!viewFavoritesBtn || !favoritesCountEl) return;
         
         const updateFavoritesView = () => {
             favoritesCountEl.textContent = favoritePoemIds.size;
             if (currentFilter.type === 'favorites') {
                 viewFavoritesBtn.classList.add('active');
-                // Don't re-render here, let the button click do it
             } else {
                 viewFavoritesBtn.classList.remove('active');
             }
@@ -94,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 favoriteBtn.classList.toggle('favorited', favoritePoemIds.has(poemId));
                 updateFavoritesView();
 
-                // If currently viewing favorites, remove the un-favorited poem instantly
                 if (currentFilter.type === 'favorites') {
                     applyFiltersAndRender(true);
                 }
@@ -116,17 +136,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting && !isLoading) {
                 const filteredPoems = getFilteredPoems();
-                // Only load more if there are more poems to show
                 if (document.querySelectorAll('.poem-card').length < filteredPoems.length) {
                     currentPage++;
-                    applyFiltersAndRender(false); // Append next page
+                    applyFiltersAndRender(false);
                 }
             }
         }, { threshold: 1.0 });
         observer.observe(trigger);
     }
     
-    // --- CORE DATA & RENDERING LOGIC (MODIFIED FOR NEW FEATURES) ---
+    // --- CORE DATA & RENDERING LOGIC ---
     async function fetchPoems() {
         if (allPoems.length > 0) return allPoems;
         try {
@@ -181,12 +200,12 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         if (isNewFilter) {
-            grid.style.opacity = 0; // Fade out for transition
+            grid.style.opacity = 0;
             setTimeout(() => {
                 renderAction();
-                grid.style.opacity = 1; // Fade in
+                grid.style.opacity = 1;
             }, 200);
-        } else { // Append for infinite scroll
+        } else {
             renderAction();
         }
     }
@@ -250,7 +269,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setupModal() {
         const modal = document.getElementById('poem-modal');
-        document.getElementById('poems-grid')?.addEventListener('click', e => {
+        const poemsGrid = document.getElementById('poems-grid');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+
+        if (!modal || !poemsGrid || !closeModalBtn) return;
+
+        poemsGrid.addEventListener('click', e => {
             if (e.target.classList.contains('read-more-btn')) {
                 const poem = allPoems.find(p => p.id === e.target.dataset.id);
                 if (poem) {
@@ -261,8 +285,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-        document.getElementById('close-modal-btn')?.addEventListener('click', () => modal.classList.add('hidden'));
-        modal?.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
+
+        const closeModal = () => modal.classList.add('hidden');
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
     }
 
     // --- HELPER FUNCTIONS ---
@@ -296,21 +322,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- ADMIN PAGE LOGIC ---
-    function initAdminPage() {
-        const dashboard = document.getElementById('dashboard');
-        const loginSection = document.getElementById('login-section');
-
-        if (sessionStorage.getItem('isAdminAuthenticated')) {
-            dashboard.classList.remove('hidden');
-            loginSection.classList.add('hidden');
-            loadAdminDashboard();
-        }
-
-        document.getElementById('login-form').addEventListener('submit', handleLogin);
-        document.getElementById('logout-btn')?.addEventListener('click', handleLogout);
-    }
-    
+    // --- ADMIN PAGE LOGIC (UNCHANGED) ---
+    function initAdminPage() { const dashboard = document.getElementById('dashboard'); const loginSection = document.getElementById('login-section'); if (sessionStorage.getItem('isAdminAuthenticated')) { dashboard.classList.remove('hidden'); loginSection.classList.add('hidden'); loadAdminDashboard(); } document.getElementById('login-form').addEventListener('submit', handleLogin); document.getElementById('logout-btn')?.addEventListener('click', handleLogout); }
     function handleLogin(e) { e.preventDefault(); const u = document.getElementById('username').value; const p = document.getElementById('password').value; const t = document.getElementById('github-token').value; if (u === adminCredentials.username && p === adminCredentials.password && t) { sessionStorage.setItem('isAdminAuthenticated', 'true'); sessionStorage.setItem('githubToken', t); document.getElementById('dashboard').classList.remove('hidden'); document.getElementById('login-section').classList.add('hidden'); loadAdminDashboard(); } else { document.getElementById('login-error').textContent = 'Invalid credentials or missing token.'; } }
     function handleLogout() { sessionStorage.clear(); window.location.reload(); }
     async function loadAdminDashboard() { const list = document.getElementById('poems-list'); list.innerHTML = `<p>Loading...</p>`; await fetchPoems(true); list.innerHTML = ''; allPoems.forEach(p => { const item = document.createElement('div'); item.className = 'existing-poem-item'; item.innerHTML = `<div><strong>${p.title}</strong><p style="font-size:0.8rem;color:#6b7280;">${(p.tags||[]).join(', ')}</p></div><div class="poem-item-actions"><button class="edit-btn" data-id="${p.id}">Edit</button><button class="delete-btn" data-id="${p.id}">Delete</button></div>`; list.appendChild(item); }); setupAdminEventListeners(); }
