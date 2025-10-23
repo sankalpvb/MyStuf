@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Science & Python Q&A</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 25px 40px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #16a085;
+            border-bottom: 1px solid #16a085;
+            padding-bottom: 5px;
+            margin-top: 40px;
+        }
+        .qa-block {
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+            transition: background-color 0.2s ease;
+        }
+        .question {
+            font-weight: 600;
+            padding: 15px 20px;
+            cursor: pointer;
+            outline: none; /* Removes focus outline on click */
+            color: #34495e;
+            display: block; /* Ensures summary takes full width */
+        }
+        /* Style for the arrow/marker */
+        .question::marker {
+            color: #16a085;
+            font-size: 1.1em;
+        }
+        .answer {
+            padding: 0 20px 15px 45px; /* Indent answer */
+            margin: 0;
+            color: #444;
+            background-color: #ffffff;
+            border-top: 1px dashed #ccc;
+            border-radius: 0 0 8px 8px;
+        }
+        /* When the details element is open */
+        .qa-block[open] {
+            background-color: #fff;
+            border-color: #16a085;
+        }
+        .qa-block[open] .question {
+            color: #16a085; /* Highlight question when open */
+        }
+        .question i {
+            font-weight: normal;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Data Science, ML & Python Q&A</h1>
+
+        <h2>Data Science and Machine Learning Fundamentals</h2>
+        <details class="qa-block">
+            <summary class="question">What are the three core disciplines that Data Science combines?</summary>
+            <p class="answer">Statistics, Computer Science, and Domain Expertise.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following statements best describes unstructured data?</summary>
+            <p class="answer">It includes data like text, speech, and video that doesn’t fit into traditional tables.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following statements correctly differentiate Data Science from Machine Learning?</summary>
+            <p class="answer">Data scientists typically focus on post-analysis interpretation, while machine learning engineers focus on deployment and maintenance.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which stage is NOT part of the Data Science lifecycle?</summary>
+            <p class="answer">Knowledge Representation.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following tasks constitute the Artificial Intelligence?</summary>
+            <p class="answer">Problem Solving, Communication and Perception, Decision Making.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Popular sources to obtain datasets for machine learning projects include:</summary>
+            <p class="answer">Kaggle, AWS datasets, UCI Machine Learning Repository.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In an end-to-end machine learning project, key steps include:</summary>
+            <p class="answer">Data loading, Data visualization, Model fine-tuning.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In a dataset, 'features' are also known as:</summary>
+            <p class="answer">Inputs.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Components of a typical dataset include:</summary>
+            <p class="answer">Features, Response.</p>
+        </details>
+
+        <h2>Supervised Learning: Regression and Classification</h2>
+        <details class="qa-block">
+            <summary class="question">The California housing price prediction problem is an example of:</summary>
+            <p class="answer">Regression.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">The objective of the California Housing Prices Dataset is to predict:</summary>
+            <p class="answer">Median House Value.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In the Pima Indians Diabetes Dataset, what is the dependent variable that the model tries to predict?</summary>
+            <p class="answer">Outcome (0 or 1).</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which are types of supervised learning tasks?</summary>
+            <p class="answer">Regression, Classification.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Logistic Regression helps in:</summary>
+            <p class="answer">Binary classification, Restricting output between 0 and 1, Drawing decision boundaries.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Polynomial Regression is used when:</summary>
+            <p class="answer">Data shows a nonlinear relationship.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following is an ensemble method in scikit-learn?</summary>
+            <p class="answer">Gradient Boosting.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which sklearn model is used for K-Nearest Neighbors classification?</summary>
+            <p class="answer">KNeighborsClassifier.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In KNN, the class of a new point is decided based on:</summary>
+            <p class="answer">Majority of k nearest neighbors.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which distance metric is most commonly used in KNN?</summary>
+            <p class="answer">Euclidean distance.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In KNN, performance may vary based on:</summary>
+            <p class="answer">Value of k, Distance metric used, Size of the training set.</p>
+        </details>
+
+        <h2>Decision Trees and Ensemble Methods</h2>
+        <details class="qa-block">
+            <summary class="question">In Decision Trees, lower entropy implies:</summary>
+            <p class="answer">Better classification ability.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What is used to measure the 'goodness' of an attribute in a Decision Tree?</summary>
+            <p class="answer">Entropy.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which measures can be used for attribute selection in Decision Trees?</summary>
+            <p class="answer">Entropy, Information Gain, Gini Index.</p>
+        </details>
+
+        <h2>Unsupervised Learning and Clustering</h2>
+        <details class="qa-block">
+            <summary class="question">Which of the following is NOT a type of unsupervised learning task?</summary>
+            <p class="answer">Classification.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In unsupervised learning, tasks include:</summary>
+            <p class="answer">Clustering, Association Rule Mining, Anomaly Detection.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In K-means clustering, the K refers to:</summary>
+            <p class="answer">Number of clusters.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In hierarchical clustering, initially each data point is considered as:</summary>
+            <p class="answer">A cluster.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which linkage method in hierarchical clustering considers the closest points between clusters?</summary>
+            <p class="answer">Single linkage.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Cluster similarity measures in hierarchical clustering include:</summary>
+            <p class="answer">Single linkage, Complete linkage, Centroid.</p>
+        </details>
+
+        <h2>Deep Learning (ANN, CNN, RNN)</h2>
+        <details class="qa-block">
+            <summary class="question">Deep Learning differs from traditional Machine Learning in terms of:</summary>
+            <p class="answer">Data requirements, Need for Feature Engineering, Interpretability, Model complexity.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which library is commonly used for developing deep learning models?</summary>
+            <p class="answer">TensorFlow.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In deep learning, which technique adjusts the model weights based on the error?</summary>
+            <p class="answer">Backpropagation.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In binary classification using ANN, which activation function is often used in the output layer?</summary>
+            <p class="answer">Sigmoid.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which types of activation functions are commonly used in neural networks?</summary>
+            <p class="answer">Linear, Sigmoid, Tanh.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">CNNs are particularly good for:</summary>
+            <p class="answer">Image and video processing.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What is the major advantage of using CNNs over traditional image classification methods?</summary>
+            <p class="answer">Automatically learn spatial hierarchies.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Key components of a CNN include:</summary>
+            <p class="answer">Convolutional Layer, Pooling Layer, Flatten Layer.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In CNNs, the layer that helps reduce spatial dimensions is called:</summary>
+            <p class="answer">Pooling layer.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In traditional image classification, each pixel of a grayscale image is considered:</summary>
+            <p class="answer">Feature/Independent variable.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">RNNs are particularly useful for:</summary>
+            <p class="answer">Sequential data.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">RNN types include:</summary>
+            <p class="answer">One-to-one, One-to-many, Many-to-one, Many-to-many.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Applications of Deep Learning include:</summary>
+            <p class="answer">Computer Vision, Speech Recognition, Natural Language Processing.</p>
+        </details>
+
+        <h2>Text Processing (NLP)</h2>
+        <details class="qa-block">
+            <summary class="question">In the traditional approach to text classification, which method is often used?</summary>
+            <p class="answer">Bag of Words.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which preprocessing step converts text into tokens?</summary>
+            <p class="answer">Tokenization.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Preprocessing steps in text classification include:</summary>
+            <p class="answer">Tokenization, Padding, Vectorization.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In text classification, Word Embedding is created to:</summary>
+            <p class="answer">Map words into numerical vectors.</p>
+        </details>
+
+        <h2>Model Training, Evaluation, and Hyperparameters</h2>
+        <details class="qa-block">
+            <summary class="question">In traditional machine learning, what is the typical ratio for splitting a dataset into training and testing sets?</summary>
+            <p class="answer">80%–20%.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which scikit-learn function is used for splitting datasets?</summary>
+            <p class="answer">train_test_split().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What method in Scikit-learn is used to split a dataset into training and testing parts?</summary>
+            <p class="answer">train_test_split.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which sklearn module is used to split a dataset into training and testing sets?</summary>
+            <p class="answer">model_selection.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Hyperparameters of a learning model include:</summary>
+            <p class="answer">Learning Rate, Number of Hidden Layers, Maximum Iterations.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What happens if the learning rate in an ANN is too high?</summary>
+            <p class="answer">Algorithm overshoots minimum.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In Gradient Descent, a too high learning rate may cause:</summary>
+            <p class="answer">No convergence.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Overfitting means:</summary>
+            <p class="answer">Good performance on training but poor on testing.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Regularization is primarily used to:</summary>
+            <p class="answer">Reduce model complexity and prevent overfitting.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Regularization techniques include:</summary>
+            <p class="answer">L1 Regularization, L2 Regularization, Dropout.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Desired characteristics of a good model include:</summary>
+            <p class="answer">Neither underfitting nor overfitting, Good performance on validation set, Generalizing well to unseen data.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which performance metric is commonly used for regression problems?</summary>
+            <p class="answer">Root Mean Squared Error.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following is a performance metric for regression?</summary>
+            <p class="answer">Mean Squared Error.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Error measures used for regression models are:</summary>
+            <p class="answer">Mean Absolute Error (MAE), Mean Squared Error( MSE), Root Mean Squared Error (RMSE).</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What does R-squared (R²) represent?</summary>
+            <p class="answer">Proportion of variance explained by the model.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What is the formula for accuracy in classification?</summary>
+            <p class="answer">(TP + TN) / (Total).</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In sklearn, which metric is used to measure how often the classifier is correct?</summary>
+            <p class="answer">accuracy_score.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In sklearn, which evaluation metric measures the balance between precision and recall?</summary>
+            <p class="answer">F1 Score.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In a confusion matrix for binary classification, True Negative (TN) means:</summary>
+            <p class="answer">Actual negative predicted as negative.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In a confusion matrix, True Positive (TP) means:</summary>
+            <p class="answer">Actual positive predicted as positive.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Confusion Matrix contains:</summary>
+            <p class="answer">True Positive, False Positive, False Negative, True Negative.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Micro-averaging in multi-class classification:</summary>
+            <p class="answer">Considers total true positives, false positives, and false negatives.</p>
+        </details>
+
+        <h2>Data Preprocessing and Scaling</h2>
+        <details class="qa-block">
+            <summary class="question">For data cleaning, which techniques are available?</summary>
+            <p class="answer">dropna(), fillna().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In handling missing values, which method replaces missing entries with the median of the column?</summary>
+            <p class="answer">fillna(median).</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following are ways to handle missing data?</summary>
+            <p class="answer">Drop the attribute, Fill with mean/median, Drop the corresponding record.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What does Feature Scaling help with?</summary>
+            <p class="answer">Makes the attributes lie in the same range, Prevents domination of large-valued features, Improves model interpretability.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which are methods of feature scaling?</summary>
+            <p class="answer">Normalization, Standardization, Min-max scaling.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Min-max scaling transforms features to a range typically between:</summary>
+            <p class="answer">0 to 1.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In the standard Min-max scaling, the values are shifted to a range of:</summary>
+            <p class="answer">0 to 1.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which Scikit-learn class is used for Min-max scaling?</summary>
+            <p class="answer">MinMaxScaler.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which method in sklearn is used for feature scaling to bring features between 0 and 1?</summary>
+            <p class="answer">MinMaxScaler.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which scaler in scikit-learn is used for standardization?</summary>
+            <p class="answer">StandardScaler.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In standardization, each feature has:</summary>
+            <p class="answer">Mean = 0 and Standard deviation = 1.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What is the purpose of the `OneHotEncoder`?</summary>
+            <p class="answer">Convert categorical data into binary vectors.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which technique is used for discretization in Scikit-learn?</summary>
+            <p class="answer">KBinsDiscretizer.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What does SMOTE primarily do in class imbalance handling?</summary>
+            <p class="answer">Create synthetic samples for minority class.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which method reduces the number of features in a dataset?</summary>
+            <p class="answer">Dimensionality Reduction.</p>
+        </details>
+
+        <h2>Statistics and Probability</h2>
+        <details class="qa-block">
+            <summary class="question">What are the two main branches of Statistics?</summary>
+            <p class="answer">Descriptive and Inferential Statistics.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following measures are considered measures of centrality? <i>(Select all that apply)</i></summary>
+            <p class="answer">Mean, Median, Mode.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What type of data is "Red, Blue, Green" categorized as?</summary>
+            <p class="answer">Qualitative Nominal.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In statistics, degrees of freedom (DF) is calculated as:</summary>
+            <p class="answer">N - 1.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which sampling method involves dividing the population into groups and selecting entire groups?</summary>
+            <p class="answer">Cluster Sampling.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following are types of hypothesis tests?</summary>
+            <p class="answer">T-test, Z-test, Chi-square Test, ANOVA.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which test is used to compare means from two different samples?</summary>
+            <p class="answer">Two-sample t-test.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">The P-value indicates:</summary>
+            <p class="answer">Statistical significance.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In hypothesis testing, a two-tailed test is used when:</summary>
+            <p class="answer">Testing for no specific direction.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Conditional probability is denoted as:</summary>
+            <p class="answer">P(A|B).</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which rule is used to calculate the probability of two independent events happening together?</summary>
+            <p class="answer">Multiplication Rule.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following are foundational rules of probability?</summary>
+            <p class="answer">Probability of Impossible Event is 0, Probability of Certain Event is 1, Addition Rule, Multiplication Rule.</p>
+        </details>
+
+        <h2>Python Programming (General, OOP, Files)</h2>
+        <details class="qa-block">
+            <summary class="question">Who developed the Python programming language?</summary>
+            <p class="answer">Guido van Rossum.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following are features of Python?</summary>
+            <p class="answer">Object-Oriented, Open Source, Portable.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following are numeric data types in Python?</summary>
+            <p class="answer">Integer, Float.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What will be the data type of value returned by the input() function?</summary>
+            <p class="answer">String.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which function is used to read input from the user in Python?</summary>
+            <p class="answer">input().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which operator is used for string concatenation in Python?</summary>
+            <p class="answer">+</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which symbol represents exponentiation in Python?</summary>
+            <p class="answer">**</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What will be the result of 7 // 2 in Python?</summary>
+            <p class="answer">3.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What does a function definition start with in Python?</summary>
+            <p class="answer">def.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following is NOT a pillar of OOP?</summary>
+            <p class="answer">Compilation.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which method is a constructor in Python classes?</summary>
+            <p class="answer">__init__.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which function is used to represent the object as a string?</summary>
+            <p class="answer">__str__.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following is an example of exception?</summary>
+            <p class="answer">SyntaxError, TypeError.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which block is executed whether an exception occurs or not?</summary>
+            <p class="answer">finally.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which mode opens a file for writing only and overwrites existing content?</summary>
+            <p class="answer">w.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which method is used to write multiple lines into a file?</summary>
+            <p class="answer">writelines().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which method reads a single line from a file?</summary>
+            <p class="answer">readline().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which attribute returns True if file is closed?</summary>
+            <p class="answer">file.closed.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which function is used to change file pointer location?</summary>
+            <p class="answer">seek().</p>
+        </details>
+
+        <h2>Python Flow Control and Logic</h2>
+        <details class="qa-block">
+            <summary class="question">Which of the following is NOT the example of decision-making structures?</summary>
+            <p class="answer">for.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which loop will always execute at least once?</summary>
+            <p class="answer">do-while loop(conceptually).</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What is the correct syntax of a for loop in python?</summary>
+            <p class="answer">for variable in sequence:.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In Python, which loop checks the condition before executing the block?</summary>
+            <p class="answer">while loop.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which statement is used to skip the execution inside loops?</summary>
+            <p class="answer">Continue.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What does the "pass" statement do in Python?</summary>
+            <p class="answer">Acts as a placeholder.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which operator returns True if both operands are True?</summary>
+            <p class="answer">and.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which are logical operators in Python?</summary>
+            <p class="answer">and, or, not.</p>
+        </details>
+
+        <h2>Python Data Structures (List, Tuple, Set, Dict, String)</h2>
+        <details class="qa-block">
+            <summary class="question">Which method of list adds an element at the end?</summary>
+            <p class="answer">append().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which data type is ordered and immutable?</summary>
+            <p class="answer">Tuple.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following is used to create a tuple?</summary>
+            <p class="answer">().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which data type does NOT support duplicate elements?</summary>
+            <p class="answer">Set.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which function is used to create an empty set?</summary>
+            <p class="answer">set().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which function returns the number of elements in a set?</summary>
+            <p class="answer">len().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which operation is used for intersection of two sets in python?</summary>
+            <p class="answer">&amp;.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which set operation results in elements only present in the first set and not in second?</summary>
+            <p class="answer">Difference.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which string method converts a string into lowercase?</summary>
+            <p class="answer">casefold().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which data type in Python is mutable and stores data in key-value pairs?</summary>
+            <p class="answer">Dictionary.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which function is used to create an empty dictionary?</summary>
+            <p class="answer">dict().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following methods returns all the keys of a dictionary?</summary>
+            <p class="answer">keys().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which method can update multiple entries in a dictionary at once?</summary>
+            <p class="answer">update().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following is TRUE about dictionary keys?</summary>
+            <p class="answer">Keys must be immutable.</p>
+        </details>
+
+        <h2>Modules and Packages</h2>
+        <details class="qa-block">
+            <summary class="question">Which keyword is used to import a package or module?</summary>
+            <p class="answer">import.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which statement is TRUE about a module?</summary>
+            <p class="answer">It can contain both functions and classes.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following is a benefit of modules?</summary>
+            <p class="answer">Easier maintenance.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What file must be created to make Python treat a directory as a package?</summary>
+            <p class="answer">__init__.py.</p>
+        </details>
+
+        <h2>NumPy and Pandas</h2>
+        <details class="qa-block">
+            <summary class="question">Which of the following Python libraries are commonly used in Data Science?</summary>
+            <p class="answer">Pandas, NumPy, TensorFlow.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which attribute gives the number of dimensions in a NumPy array?</summary>
+            <p class="answer">ndim.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which NumPy function is used to create an array filled with zeros?</summary>
+            <p class="answer">zeros().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which data type in NumPy represents a double precision float?</summary>
+            <p class="answer">float64.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In NumPy, which function is used to find the mean of array elements?</summary>
+            <p class="answer">mean().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which function reads a CSV file into a pandas DataFrame?</summary>
+            <p class="answer">read_csv().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which function in Pandas is used to write a DataFrame to a CSV file?</summary>
+            <p class="answer">to_csv().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">What is returned by pandas.Series if the index is not specified?</summary>
+            <p class="answer">Default numerical index.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which method returns first 5 rows of a DataFrame?</summary>
+            <p class="answer">head().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which method returns descriptive statistics of DataFrame?</summary>
+            <p class="answer">describe().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which method is used to print entire DataFrame as a string?</summary>
+            <p class="answer">to_string().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which method splits a DataFrame column into multiple columns?</summary>
+            <p class="answer">str.split().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which function in pandas is used to group data?</summary>
+            <p class="answer">groupby().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In pandas merge operation, which 'how' argument performs intersection of two DataFrames?</summary>
+            <p class="answer">inner.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which method is used for a full outer join in pandas?</summary>
+            <p class="answer">merge(..., how='outer').</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which join includes all records from the left DataFrame and matching records from the right DataFrame?</summary>
+            <p class="answer">Left Join.</p>
+        </details>
+
+        <h2>Visualization</h2>
+        <details class="qa-block">
+            <summary class="question">Which Python library is primarily used for creating visualizations?</summary>
+            <p class="answer">Seaborn.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which Matplotlib function is used to plot histograms?</summary>
+            <p class="answer">hist().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which plot in Seaborn is used for kernel density estimation?</summary>
+            <p class="answer">kdeplot().</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which visualization represents a correlation matrix?</summary>
+            <p class="answer">heatmap.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which plot is best for representing pairwise relationships in a dataset?</summary>
+            <p class="answer">pairplot.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which type of plot displays the five-number summary (min, Q1, median, Q3, max)?</summary>
+            <p class="answer">box plot.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following are important components of a Box and Whisker plot?</summary>
+            <p class="answer">Minimum, Maximum, Median, Quartiles.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">In a box plot, what does the box represent?</summary>
+            <p class="answer">Interquartile Range (IQR).</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which plot is mainly used to describe frequencies of categorical data?</summary>
+            <p class="answer">Frequency Plot.</p>
+        </Details>
+
+        <h2>Scikit-learn (sklearn)</h2>
+        <details class="qa-block">
+            <summary class="question">Which library is abbreviated as sklearn?</summary>
+            <p class="answer">Scikit-learn.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Scikit-learn supports:</summary>
+            <p class="answer">Supervised learning, Unsupervised learning, Dimensionality reduction.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following is NOT a property of Scikit-learn?</summary>
+            <p class="answer">Image generation.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Properties of Scikit-learn include:</summary>
+            <p class="answer">Supervised learning algorithms, Cross-validation techniques, Dimensionality reduction.</p>
+        </details>
+
+        <h2>Google Colab</h2>
+        <details class="qa-block">
+            <summary class="question">Which of the following is a web-based interactive development environment ideal for data science?</summary>
+            <p class="answer">Colab.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Google Colab is primarily based on which open-source project?</summary>
+            <p class="answer">Jupyter.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Which of the following are features of Google Colab?</summary>
+            <p class="answer">Pre-installed data science libraries, Integration with Kaggle datasets, Automatic storage and version control.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">Where are Colab notebook file stored by default?</summary>
+            <p class="answer">Google Drive.</p>
+        </details>
+        <details class="qa-block">
+            <summary class="question">When accessing a GitHub project in Colab, what is the correct approach?</summary>
+            <p class="answer">Open the .ipynb file and click 'Open in Colab'.</p>
+        </details>
+
+    </div>
+
+</body>
+</html>
