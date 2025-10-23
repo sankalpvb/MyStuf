@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Interactive Q&A — Data Science & ML</title>
+  <style>
+    :root{
+      --bg:#071029; --muted:#97a0b9; --accent:#7c3aed; --glass: rgba(255,255,255,0.03);
+      --maxw:1100px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+      background: linear-gradient(180deg,var(--bg) 0%, #0b1630 100%); color:#e6eef8;
+      padding:28px 18px; display:flex; justify-content:center; align-items:flex-start;
+    }
+    .wrap{width:100%; max-width:var(--maxw)}
+    header{display:flex; gap:14px; align-items:center; margin-bottom:14px}
+    .logo{background:linear-gradient(90deg,var(--accent),#4f46e5); width:56px;height:56px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:20px;box-shadow:0 6px 18px rgba(124,58,237,0.18)}
+    h1{font-size:20px;margin:0}
+    p.subtitle{margin:0;color:var(--muted); font-size:13px}
+
+    .toolbar{display:flex;gap:10px;align-items:center;margin:16px 0}
+    .searchbox{flex:1; display:flex; gap:8px}
+    input[type="search"]{flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit;font-size:14px}
+    button.btn{padding:10px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#4f46e5);color:white;cursor:pointer;font-weight:600}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:8px 10px;border-radius:8px;cursor:pointer}
+
+    .meta{display:flex;gap:12px;align-items:center;color:var(--muted);font-size:13px}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    details{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:0;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
+    summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    summary h3{margin:0;font-size:15px}
+    summary .count{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;color:var(--muted);font-weight:600;font-size:13px}
+
+    .content{padding:12px 16px 18px}
+    .qa-item{padding:10px;border-radius:10px;margin-bottom:8px;background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.02)}
+    .question{font-weight:700;color:#dbeafe}
+    .answer{margin-top:6px;color:var(--muted);font-size:14px}
+    .hide{display:none}
+    .highlight{box-shadow:0 6px 18px rgba(124,58,237,0.06);border-left:3px solid rgba(124,58,237,0.9);}
+
+    .footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+
+    @media (min-width:720px){ .grid{grid-template-columns:1fr 1fr} }
+    kbd{background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">DS</div>
+      <div>
+        <h1>Interactive Q&amp;A — Data Science &amp; ML</h1>
+        <p class="subtitle">Search mode: <strong>questions only</strong>. Use <kbd>Ctrl/Cmd + K</kbd> to focus search.</p>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="searchbox">
+        <input id="search" type="search" placeholder="Search questions (e.g. 'Regression', 'TensorFlow', 'K-means')" aria-label="Search questions" />
+        <button id="clear" class="ghost" title="Clear search">Clear</button>
+      </div>
+      <div class="meta">
+        <div id="matchCount">Showing all</div>
+        <button id="expandAll" class="ghost" title="Expand all sections">Expand all</button>
+        <button id="collapseAll" class="ghost" title="Collapse all sections">Collapse all</button>
+        <button id="downloadBtn" class="btn" title="Download this page as HTML">Download</button>
+      </div>
+    </div>
+
+    <div class="grid" id="topics">
+      <!-- topics will be injected here -->
+    </div>
+
+    <div class="footer">Tip: Search matches questions only. Clearing the search restores the full view. Press <kbd>Esc</kbd> to clear search.</div>
+  </div>
+
+  <script>
+    // Small helpers
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+    const topicsRoot = $('#topics');
+
+    // DATA: copy/paste the Q&A content from your file into this JS structure.
+    const DATA = {
+      "Data Science and Machine Learning Fundamentals": [
+        ["What are the three core disciplines that Data Science combines?", "Statistics, Computer Science, and Domain Expertise."],
+        ["Which of the following statements best describes unstructured data?", "It includes data like text, speech, and video that doesn’t fit into traditional tables."],
+        ["Which of the following statements correctly differentiate Data Science from Machine Learning?", "Data scientists typically focus on post-analysis interpretation, while machine learning engineers focus on deployment and maintenance."],
+        ["Which stage is NOT part of the Data Science lifecycle?", "Knowledge Representation."],
+        ["Which of the following tasks constitute the Artificial Intelligence?", "Problem Solving, Communication and Perception, Decision Making."],
+        ["Popular sources to obtain datasets for machine learning projects include:", "Kaggle, AWS datasets, UCI Machine Learning Repository."],
+        ["In an end-to-end machine learning project, key steps include:", "Data loading, Data visualization, Model fine-tuning."],
+        ["In a dataset, 'features' are also known as:", "Inputs."],
+        ["Components of a typical dataset include:", "Features, Response."]
+      ],
+      "Supervised Learning: Regression and Classification": [
+        ["The California housing price prediction problem is an example of:", "Regression."],
+        ["The objective of the California Housing Prices Dataset is to predict:", "Median House Value."],
+        ["In the Pima Indians Diabetes Dataset, what is the dependent variable that the model tries to predict?", "Outcome (0 or 1)."],
+        ["Which are types of supervised learning tasks?", "Regression, Classification."],
+        ["Logistic Regression helps in:", "Binary classification, Restricting output between 0 and 1, Drawing decision boundaries."],
+        ["Polynomial Regression is used when:", "Data shows a nonlinear relationship."],
+        ["Which of the following is an ensemble method in scikit-learn?", "Gradient Boosting."],
+        ["Which sklearn model is used for K-Nearest Neighbors classification?", "KNeighborsClassifier."],
+        ["In KNN, the class of a new point is decided based on:", "Majority of k nearest neighbors."],
+        ["Which distance metric is most commonly used in KNN?", "Euclidean distance."],
+        ["In KNN, performance may vary based on:", "Value of k, Distance metric used, Size of the training set."]
+      ],
+      "Decision Trees and Ensemble Methods": [
+        ["In Decision Trees, lower entropy implies:", "Better classification ability."],
+        ["What is used to measure the 'goodness' of an attribute in a Decision Tree?", "Entropy."],
+        ["Which measures can be used for attribute selection in Decision Trees?", "Entropy, Information Gain, Gini Index."]
+      ],
+      "Unsupervised Learning and Clustering": [
+        ["Which of the following is NOT a type of unsupervised learning task?", "Classification."],
+        ["In unsupervised learning, tasks include:", "Clustering, Association Rule Mining, Anomaly Detection."],
+        ["In K-means clustering, the K refers to:", "Number of clusters."],
+        ["In hierarchical clustering, initially each data point is considered as:", "A cluster."],
+        ["Which linkage method in hierarchical clustering considers the closest points between clusters?", "Single linkage."],
+        ["Cluster similarity measures in hierarchical clustering include:", "Single linkage, Complete linkage, Centroid."]
+      ],
+      "Deep Learning (ANN, CNN, RNN)": [
+        ["Deep Learning differs from traditional Machine Learning in terms of:", "Data requirements, Need for Feature Engineering, Interpretability, Model complexity."],
+        ["Which library is commonly used for developing deep learning models?", "TensorFlow."],
+        ["In deep learning, which technique adjusts the model weights based on the error?", "Backpropagation."],
+        ["In binary classification using ANN, which activation function is often used in the output layer?", "Sigmoid."],
+        ["Which types of activation functions are commonly used in neural networks?", "Linear, Sigmoid, Tanh."],
+        ["CNNs are particularly good for:", "Image and video processing."],
+        ["What is the major advantage of using CNNs over traditional image classification methods?", "Automatically learn spatial hierarchies."],
+        ["Key components of a CNN include:", "Convolutional Layer, Pooling Layer, Flatten Layer."],
+        ["In CNNs, the layer that helps reduce spatial dimensions is called:", "Pooling layer."],
+        ["In traditional image classification, each pixel of a grayscale image is considered:", "Feature/Independent variable."],
+        ["RNNs are particularly useful for:", "Sequential data."],
+        ["RNN types include:", "One-to-one, One-to-many, Many-to-one, Many-to-many."]
+      ],
+      "Text Processing (NLP)": [
+        ["In the traditional approach to text classification, which method is often used?", "Bag of Words."],
+        ["Which preprocessing step converts text into tokens?", "Tokenization."],
+        ["Preprocessing steps in text classification include:", "Tokenization, Padding, Vectorization."],
+        ["In text classification, Word Embedding is created to:", "Map words into numerical vectors."]
+      ],
+      "Model Training, Evaluation, and Hyperparameters": [
+        ["In traditional machine learning, what is the typical ratio for splitting a dataset into training and testing sets?", "80%–20%."],
+        ["Which scikit-learn function is used for splitting datasets?", "train_test_split()."],
+        ["What method in Scikit-learn is used to split a dataset into training and testing parts?", "train_test_split."],
+        ["Which sklearn module is used to split a dataset into training and testing sets?", "model_selection."],
+        ["Hyperparameters of a learning model include:", "Learning Rate, Number of Hidden Layers, Maximum Iterations."],
+        ["What happens if the learning rate in an ANN is too high?", "Algorithm overshoots minimum."],
+        ["In Gradient Descent, a too high learning rate may cause:", "No convergence."],
+        ["Overfitting means:", "Good performance on training but poor on testing."],
+        ["Regularization is primarily used to:", "Reduce model complexity and prevent overfitting."],
+        ["Regularization techniques include:", "L1 Regularization, L2 Regularization, Dropout."],
+        ["Desired characteristics of a good model include:", "Neither underfitting nor overfitting, Good performance on validation set, Generalizing well to unseen data."],
+        ["Which performance metric is commonly used for regression problems?", "Root Mean Squared Error."],
+        ["Which of the following is a performance metric for regression?", "Mean Squared Error."],
+        ["Error measures used for regression models are:", "Mean Absolute Error (MAE), Mean Squared Error( MSE), Root Mean Squared Error (RMSE)."],
+        ["What does R-squared (R²) represent?", "Proportion of variance explained by the model."],
+        ["What is the formula for accuracy in classification?", "(TP + TN) / (Total)."],
+        ["In sklearn, which metric is used to measure how often the classifier is correct?", "accuracy_score."],
+        ["In sklearn, which evaluation metric measures the balance between precision and recall?", "F1 Score."],
+        ["In a confusion matrix for binary classification, True Negative (TN) means:", "Actual negative predicted as negative."],
+        ["In a confusion matrix, True Positive (TP) means:", "Actual positive predicted as positive."],
+        ["Confusion Matrix contains:", "True Positive, False Positive, False Negative, True Negative."],
+        ["Micro-averaging in multi-class classification:", "Considers total true positives, false positives, and false negatives."]
+      ],
+      "Data Preprocessing and Scaling": [
+        ["For data cleaning, which techniques are available?", "dropna(), fillna()."],
+        ["In handling missing values, which method replaces missing entries with the median of the column?", "fillna(median)."],
+        ["Which of the following are ways to handle missing data?", "Drop the attribute, Fill with mean/median, Drop the corresponding record."],
+        ["What does Feature Scaling help with?", "Makes the attributes lie in the same range, Prevents domination of large-valued features, Improves model interpretability."],
+        ["Which are methods of feature scaling?", "Normalization, Standardization, Min-max scaling."],
+        ["Min-max scaling transforms features to a range typically between:", "0 to 1."],
+        ["Which Scikit-learn class is used for Min-max scaling?", "MinMaxScaler."],
+        ["Which scaler in scikit-learn is used for standardization?", "StandardScaler."],
+        ["In standardization, each feature has:", "Mean = 0 and Standard deviation = 1."],
+        ["What is the purpose of the `OneHotEncoder`?", "Convert categorical data into binary vectors."],
+        ["Which technique is used for discretization in Scikit-learn?", "KBinsDiscretizer."],
+        ["What does SMOTE primarily do in class imbalance handling?", "Create synthetic samples for minority class."],
+        ["Which method reduces the number of features in a dataset?", "Dimensionality Reduction."]
+      ],
+      "Statistics and Probability": [
+        ["What are the two main branches of Statistics?", "Descriptive and Inferential Statistics."],
+        ["Which of the following measures are considered measures of centrality?", "Mean, Median, Mode."],
+        ["What type of data is \"Red, Blue, Green\" categorized as?", "Qualitative Nominal."],
+        ["In statistics, degrees of freedom (DF) is calculated as:", "N - 1."],
+        ["Which sampling method involves dividing the population into groups and selecting entire groups?", "Cluster Sampling."],
+        ["Which of the following are types of hypothesis tests?", "T-test, Z-test, Chi-square Test, ANOVA."],
+        ["Which test is used to compare means from two different samples?", "Two-sample t-test."],
+        ["The P-value indicates:", "Statistical significance."],
+        ["In hypothesis testing, a two-tailed test is used when:", "Testing for no specific direction."],
+        ["Conditional probability is denoted as:", "P(A|B)."],
+        ["Which rule is used to calculate the probability of two independent events happening together?", "Multiplication Rule."]
+      ],
+      "Python Programming (General, OOP, Files)": [
+        ["Who developed the Python programming language?", "Guido van Rossum."],
+        ["Which of the following are features of Python?", "Object-Oriented, Open Source, Portable."],
+        ["Which of the following are numeric data types in Python?", "Integer, Float."],
+        ["What will be the data type of value returned by the input() function?", "String."],
+        ["Which function is used to read input from the user in Python?", "input()."],
+        ["Which operator is used for string concatenation in Python?", "+"],
+        ["Which symbol represents exponentiation in Python?", "**."],
+        ["What will be the result of 7 // 2 in Python?", "3."],
+        ["What does a function definition start with in Python?", "def."],
+        ["Which of the following is NOT a pillar of OOP?", "Compilation."],
+        ["Which method is a constructor in Python classes?", "__init__."],
+        ["Which function is used to represent the object as a string?", "__str__."],
+        ["Which of the following is an example of exception?", "SyntaxError, TypeError."],
+        ["Which block is executed whether an exception occurs or not?", "finally."],
+        ["Which mode opens a file for writing only and overwrites existing content?", "w."],
+        ["Which method is used to write multiple lines into a file?", "writelines()."],
+        ["Which method reads a single line from a file?", "readline()."],
+        ["Which attribute returns True if file is closed?", "file.closed."],
+        ["Which function is used to change file pointer location?", "seek()."]
+      ],
+      "Python Flow Control and Logic": [
+        ["Which of the following is NOT the example of decision-making structures?", "for."],
+        ["Which loop will always execute at least once?", "do-while loop(conceptually)."],
+        ["What is the correct syntax of a for loop in python?", "for variable in sequence:."],
+        ["In Python, which loop checks the condition before executing the block?", "while loop."],
+        ["Which statement is used to skip the execution inside loops?", "Continue."],
+        ["What does the \"pass\" statement do in Python?", "Acts as a placeholder."],
+        ["Which operator returns True if both operands are True?", "and."],
+        ["Which are logical operators in Python?", "and, or, not."]
+      ],
+      "Python Data Structures (List, Tuple, Set, Dict, String)": [
+        ["Which method of list adds an element at the end?", "append()."],
+        ["Which data type is ordered and immutable?", "Tuple."],
+        ["Which of the following is used to create a tuple?", "()"],
+        ["Which data type does NOT support duplicate elements?", "Set."],
+        ["Which function is used to create an empty set?", "set()."],
+        ["Which function returns the number of elements in a set?", "len()."],
+        ["Which operation is used for intersection of two sets in python?", "&."],
+        ["Which set operation results in elements only present in the first set and not in second?", "Difference."],
+        ["Which string method converts a string into lowercase?", "casefold()."],
+        ["Which data type in Python is mutable and stores data in key-value pairs?", "Dictionary."],
+        ["Which function is used to create an empty dictionary?", "dict()."],
+        ["Which of the following methods returns all the keys of a dictionary?", "keys()."],
+        ["Which method can update multiple entries in a dictionary at once?", "update()."],
+        ["Which of the following is TRUE about dictionary keys?", "Keys must be immutable."]
+      ],
+      "Modules and Packages": [
+        ["Which keyword is used to import a package or module?", "import."],
+        ["Which statement is TRUE about a module?", "It can contain both functions and classes."],
+        ["Which of the following is a benefit of modules?", "Easier maintenance."],
+        ["What file must be created to make Python treat a directory as a package?", "__init__.py."]
+      ],
+      "NumPy and Pandas": [
+        ["Which of the following Python libraries are commonly used in Data Science?", "Pandas, NumPy, TensorFlow."],
+        ["Which attribute gives the number of dimensions in a NumPy array?", "ndim."],
+        ["Which NumPy function is used to create an array filled with zeros?", "zeros()."],
+        ["Which data type in NumPy represents a double precision float?", "float64."],
+        ["In NumPy, which function is used to find the mean of array elements?", "mean()."],
+        ["Which function reads a CSV file into a pandas DataFrame?", "read_csv()."],
+        ["Which function in Pandas is used to write a DataFrame to a CSV file?", "to_csv()."],
+        ["What is returned by pandas.Series if the index is not specified?", "Default numerical index."],
+        ["Which method returns first 5 rows of a DataFrame?", "head()."],
+        ["Which method returns descriptive statistics of DataFrame?", "describe()."],
+        ["Which method is used to print entire DataFrame as a string?", "to_string()."],
+        ["Which method splits a DataFrame column into multiple columns?", "str.split()."],
+        ["Which function in pandas is used to group data?", "groupby()."],
+        ["In pandas merge operation, which 'how' argument performs intersection of two DataFrames?", "inner."],
+        ["Which method is used for a full outer join in pandas?", "merge(..., how='outer')."],
+        ["Which join includes all records from the left DataFrame and matching records from the right DataFrame?", "Left Join."]
+      ],
+      "Visualization": [
+        ["Which Python library is primarily used for creating visualizations?", "Seaborn."],
+        ["Which Matplotlib function is used to plot histograms?", "hist()."],
+        ["Which plot in Seaborn is used for kernel density estimation?", "kdeplot()."],
+        ["Which visualization represents a correlation matrix?", "heatmap."],
+        ["Which plot is best for representing pairwise relationships in a dataset?", "pairplot."],
+        ["Which type of plot displays the five-number summary (min, Q1, median, Q3, max)?", "box plot."],
+        ["Which of the following are important components of a Box and Whisker plot?", "Minimum, Maximum, Median, Quartiles."],
+        ["In a box plot, what does the box represent?", "Interquartile Range (IQR)."],
+        ["Which plot is mainly used to describe frequencies of categorical data?", "Frequency Plot."]
+      ],
+      "Scikit-learn (sklearn)": [
+        ["Which library is abbreviated as sklearn?", "Scikit-learn."],
+        ["Scikit-learn supports:", "Supervised learning, Unsupervised learning, Dimensionality reduction."],
+        ["Which of the following is NOT a property of Scikit-learn?", "Image generation."],
+        ["Properties of Scikit-learn include:", "Supervised learning algorithms, Cross-validation techniques, Dimensionality reduction."]
+      ],
+      "Google Colab": [
+        ["Which of the following is a web-based interactive development environment ideal for data science?", "Colab."],
+        ["Google Colab is primarily based on which open-source project?", "Jupyter."],
+        ["Which of the following are features of Google Colab?", "Pre-installed data science libraries, Integration with Kaggle datasets, Automatic storage and version control."],
+        ["Where are Colab notebook file stored by default?", "Google Drive."],
+        ["When accessing a GitHub project in Colab, what is the correct approach?", "Open the .ipynb file and click 'Open in Colab'."]
+      ]
+    };
+
+    // Build UI from DATA
+    function buildUI() {
+      topicsRoot.innerHTML = '';
+      for (const [topic, qas] of Object.entries(DATA)) {
+        const d = document.createElement('details');
+        const s = document.createElement('summary');
+        const h = document.createElement('h3'); h.textContent = topic;
+        const cnt = document.createElement('div'); cnt.className = 'count'; cnt.textContent = qas.length;
+        s.appendChild(h); s.appendChild(cnt);
+        d.appendChild(s);
+
+        const content = document.createElement('div'); content.className = 'content';
+        qas.forEach(([q,a]) => {
+          const item = document.createElement('div'); item.className = 'qa-item';
+          const qel = document.createElement('div'); qel.className = 'question'; qel.textContent = q;
+          const ael = document.createElement('div'); ael.className = 'answer'; ael.textContent = a;
+          item.appendChild(qel); item.appendChild(ael);
+          content.appendChild(item);
+        });
+        d.appendChild(content);
+        topicsRoot.appendChild(d);
+      }
+    }
+
+    buildUI();
+
+    // Cached refs
+    const searchEl = $('#search');
+    const clearBtn = $('#clear');
+    const matchCount = $('#matchCount');
+    const expandAllBtn = $('#expandAll');
+    const collapseAllBtn = $('#collapseAll');
+    const downloadBtn = $('#downloadBtn');
+
+    let qaItems = () => $$('.qa-item'); // function to always get fresh list
+    let sections = () => $$('#topics > details');
+
+    // normalize text
+    const norm = s => (s || '').toString().toLowerCase().trim();
+
+    // debounce helper
+    function debounce(fn, wait = 250){
+      let t;
+      return function(...args){
+        clearTimeout(t);
+        t = setTimeout(()=> fn.apply(this,args), wait);
+      };
+    }
+
+    function updateMatchCount(n) {
+      const total = qaItems().length;
+      if (n === total) matchCount.textContent = 'Showing all';
+      else matchCount.textContent = `${n} match${n === 1 ? '' : 'es'}`;
+    }
+
+    function filterQuery(q) {
+      const qn = norm(q);
+      let visible = 0;
+      // close all sections initially
+      sections().forEach(s => s.open = false);
+
+      qaItems().forEach(item => {
+        const qText = norm(item.querySelector('.question').textContent);
+        const parentSec = item.closest('details');
+        const matches = qn === '' || qText.includes(qn);
+        if (matches) {
+          item.classList.remove('hide');
+          item.classList.add('highlight');
+          if (parentSec) parentSec.open = true;
+          visible++;
+        } else {
+          item.classList.add('hide');
+          item.classList.remove('highlight');
+        }
+      });
+
+      // If no query, remove highlights and collapse to initial state (open first section)
+      if (qn === '') {
+        qaItems().forEach(it => { it.classList.remove('hide','highlight'); });
+        sections().forEach(s => s.open = false);
+        if (sections()[0]) sections()[0].open = true;
+        visible = qaItems().length;
+      }
+
+      updateMatchCount(visible);
+    }
+
+    const debouncedFilter = debounce(e => filterQuery(e.target.value), 120);
+
+    searchEl.addEventListener('input', debouncedFilter);
+    clearBtn.addEventListener('click', () => { searchEl.value = ''; filterQuery(''); searchEl.focus(); });
+
+    expandAllBtn.addEventListener('click', () => sections().forEach(s => s.open = true));
+    collapseAllBtn.addEventListener('click', () => sections().forEach(s => s.open = false));
+
+    // keyboard shortcuts: Ctrl/Cmd+K to focus search, Esc to clear
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        searchEl.focus();
+        searchEl.select();
+      } else if (e.key === 'Escape') {
+        if (searchEl.value) { searchEl.value=''; filterQuery(''); }
+        else searchEl.blur();
+      }
+    });
+
+    // download page: create a cleaned HTML snapshot and trigger a download
+    downloadBtn.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      try {
+        // create a minimal snapshot: include current HTML but keep external styles/scripts inline already present
+        const snapshot = `<!doctype html>\\n` + document.documentElement.outerHTML;
+        const blob = new Blob([snapshot], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'ml_qna.html';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        // revoke after short delay
+        setTimeout(() => URL.revokeObjectURL(url), 15000);
+      } catch (err) {
+        alert('Download failed: ' + err);
+      }
+    });
+
+    // initialize state
+    filterQuery('');
+  </script>
+</body>
+</html>
