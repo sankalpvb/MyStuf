@@ -1,90 +1,264 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Interactive Q&A — Data Science & ML</title>
   <style>
-    :root{
-      --bg:#071029; --muted:#97a0b9; --accent:#7c3aed; --glass: rgba(255,255,255,0.03);
-      --maxw:1100px;
+    :root {
+      --bg: #060c1f;
+      --accent: #7c3aed;
+      --muted: #97a0b9;
+      --glass: rgba(255, 255, 255, 0.04);
+      --maxw: 1100px;
+      --pad: 16px;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
-      background: linear-gradient(180deg,var(--bg) 0%, #0b1630 100%); color:#e6eef8;
-      padding:28px 18px; display:flex; justify-content:center; align-items:flex-start;
+
+    * {
+      box-sizing: border-box;
     }
-    .wrap{width:100%; max-width:var(--maxw)}
-    header{display:flex; gap:14px; align-items:center; margin-bottom:14px}
-    .logo{background:linear-gradient(90deg,var(--accent),#4f46e5); width:56px;height:56px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:20px;box-shadow:0 6px 18px rgba(124,58,237,0.18)}
-    h1{font-size:20px;margin:0}
-    p.subtitle{margin:0;color:var(--muted); font-size:13px}
 
-    .toolbar{display:flex;gap:10px;align-items:center;margin:16px 0}
-    .searchbox{flex:1; display:flex; gap:8px}
-    input[type="search"]{flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit;font-size:14px}
-    button.btn{padding:10px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#4f46e5);color:white;cursor:pointer;font-weight:600}
-    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:8px 10px;border-radius:8px;cursor:pointer}
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+      background: linear-gradient(180deg, var(--bg), #0b1630);
+      color: #e6eef8;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
 
-    .meta{display:flex;gap:12px;align-items:center;color:var(--muted);font-size:13px}
+    .wrap {
+      width: 100%;
+      max-width: var(--maxw);
+      padding: var(--pad);
+    }
 
-    .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    details{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:0;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
-    summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-    summary h3{margin:0;font-size:15px}
-    summary .count{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;color:var(--muted);font-weight:600;font-size:13px}
+    header {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(180deg, #060c1f 60%, #0b1630 100%);
+      z-index: 10;
+      padding-bottom: 10px;
+    }
 
-    .content{padding:12px 16px 18px}
-    .qa-item{padding:10px;border-radius:10px;margin-bottom:8px;background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.02)}
-    .question{font-weight:700;color:#dbeafe}
-    .answer{margin-top:6px;color:var(--muted);font-size:14px}
-    .hide{display:none}
-    .highlight{box-shadow:0 6px 18px rgba(124,58,237,0.06);border-left:3px solid rgba(124,58,237,0.9);}
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, var(--accent), #4f46e5);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 20px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
 
-    .footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+    .header-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-    @media (min-width:720px){ .grid{grid-template-columns:1fr 1fr} }
-    kbd{background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:12px}
+    h1 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 2px 0 0;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 12px 0;
+    }
+
+    .searchbox {
+      flex: 1;
+      display: flex;
+      gap: 8px;
+    }
+
+    input[type="search"] {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--glass);
+      background: rgba(255, 255, 255, 0.05);
+      color: inherit;
+      font-size: 14px;
+    }
+
+    button.btn,
+    button.ghost {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button.btn {
+      background: linear-gradient(90deg, var(--accent), #4f46e5);
+      color: white;
+    }
+
+    button.ghost {
+      background: var(--glass);
+      color: var(--muted);
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media(min-width:768px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+    }
+
+    details {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    summary h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    summary .count {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    .content {
+      padding: 0 16px 16px;
+    }
+
+    .qa-item {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .question {
+      font-weight: 600;
+      color: #dbeafe;
+      font-size: 14px;
+    }
+
+    .answer {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .hide {
+      display: none;
+    }
+
+    .highlight {
+      border-left: 3px solid var(--accent);
+      background: rgba(124, 58, 237, 0.05);
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    kbd {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <header>
-      <div class="logo">DS</div>
-      <div>
-        <h1>Interactive Q&amp;A — Data Science &amp; ML</h1>
-        <p class="subtitle">Search mode: <strong>questions only</strong>. Use <kbd>Ctrl/Cmd + K</kbd> to focus search.</p>
+      <div class="header-row">
+        <div class="logo">DS</div>
+        <div>
+          <h1>Interactive Q&A — Data Science & ML</h1>
+          <p class="subtitle">Search questions easily (tap header to focus)</p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="searchbox">
+          <input id="search" type="search" placeholder="Search question..." />
+          <button id="clear" class="ghost">Clear</button>
+        </div>
+        <div class="meta">
+          <span id="matchCount">Showing all</span>
+          <button id="expandAll" class="ghost">Expand</button>
+          <button id="collapseAll" class="ghost">Collapse</button>
+          <button id="downloadBtn" class="btn">Download</button>
+        </div>
       </div>
     </header>
-
-    <div class="toolbar">
-      <div class="searchbox">
-        <input id="search" type="search" placeholder="Search questions (e.g. 'Regression', 'TensorFlow', 'K-means')" aria-label="Search questions" />
-        <button id="clear" class="ghost" title="Clear search">Clear</button>
-      </div>
-      <div class="meta">
-        <div id="matchCount">Showing all</div>
-        <button id="expandAll" class="ghost" title="Expand all sections">Expand all</button>
-        <button id="collapseAll" class="ghost" title="Collapse all sections">Collapse all</button>
-        <button id="downloadBtn" class="btn" title="Download this page as HTML">Download</button>
-      </div>
+    <div class="grid" id="topics"></div>
+    <div class="footer">
+      Tap <kbd>Expand</kbd> to open all topics. Tap a card to view details.
     </div>
-
-    <div class="grid" id="topics">
-      <!-- topics will be injected here -->
-    </div>
-
-    <div class="footer">Tip: Search matches questions only. Clearing the search restores the full view. Press <kbd>Esc</kbd> to clear search.</div>
   </div>
 
   <script>
-    // Small helpers
-    const $ = (sel, root = document) => root.querySelector(sel);
-    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-    const topicsRoot = $('#topics');
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    const topics = $('#topics');
 
-    // DATA: copy/paste the Q&A content from your file into this JS structure.
+    // minimal sample (replace with your full DATA)
     const DATA = {
       "Data Science and Machine Learning Fundamentals": [
         ["What are the three core disciplines that Data Science combines?", "Statistics, Computer Science, and Domain Expertise."],
@@ -292,136 +466,65 @@
       ]
     };
 
-    // Build UI from DATA
     function buildUI() {
-      topicsRoot.innerHTML = '';
+      topics.innerHTML = '';
       for (const [topic, qas] of Object.entries(DATA)) {
-        const d = document.createElement('details');
-        const s = document.createElement('summary');
-        const h = document.createElement('h3'); h.textContent = topic;
-        const cnt = document.createElement('div'); cnt.className = 'count'; cnt.textContent = qas.length;
-        s.appendChild(h); s.appendChild(cnt);
-        d.appendChild(s);
-
-        const content = document.createElement('div'); content.className = 'content';
-        qas.forEach(([q,a]) => {
+        const det = document.createElement('details');
+        const sum = document.createElement('summary');
+        const h3 = document.createElement('h3'); h3.textContent = topic;
+        const count = document.createElement('div'); count.className = 'count'; count.textContent = qas.length;
+        sum.append(h3, count);
+        det.append(sum);
+        const c = document.createElement('div'); c.className = 'content';
+        qas.forEach(([q, a]) => {
           const item = document.createElement('div'); item.className = 'qa-item';
-          const qel = document.createElement('div'); qel.className = 'question'; qel.textContent = q;
-          const ael = document.createElement('div'); ael.className = 'answer'; ael.textContent = a;
-          item.appendChild(qel); item.appendChild(ael);
-          content.appendChild(item);
+          item.innerHTML = `<div class="question">${q}</div><div class="answer">${a}</div>`;
+          c.append(item);
         });
-        d.appendChild(content);
-        topicsRoot.appendChild(d);
+        det.append(c);
+        topics.append(det);
       }
     }
-
     buildUI();
 
-    // Cached refs
-    const searchEl = $('#search');
-    const clearBtn = $('#clear');
+    const search = $('#search');
+    const clear = $('#clear');
     const matchCount = $('#matchCount');
-    const expandAllBtn = $('#expandAll');
-    const collapseAllBtn = $('#collapseAll');
-    const downloadBtn = $('#downloadBtn');
 
-    let qaItems = () => $$('.qa-item'); // function to always get fresh list
-    let sections = () => $$('#topics > details');
-
-    // normalize text
-    const norm = s => (s || '').toString().toLowerCase().trim();
-
-    // debounce helper
-    function debounce(fn, wait = 250){
-      let t;
-      return function(...args){
-        clearTimeout(t);
-        t = setTimeout(()=> fn.apply(this,args), wait);
-      };
-    }
-
-    function updateMatchCount(n) {
-      const total = qaItems().length;
-      if (n === total) matchCount.textContent = 'Showing all';
-      else matchCount.textContent = `${n} match${n === 1 ? '' : 'es'}`;
-    }
-
-    function filterQuery(q) {
-      const qn = norm(q);
-      let visible = 0;
-      // close all sections initially
-      sections().forEach(s => s.open = false);
-
-      qaItems().forEach(item => {
-        const qText = norm(item.querySelector('.question').textContent);
-        const parentSec = item.closest('details');
-        const matches = qn === '' || qText.includes(qn);
-        if (matches) {
-          item.classList.remove('hide');
-          item.classList.add('highlight');
-          if (parentSec) parentSec.open = true;
-          visible++;
-        } else {
-          item.classList.add('hide');
-          item.classList.remove('highlight');
-        }
+    function filter(q) {
+      const n = q.trim().toLowerCase();
+      let vis = 0;
+      $$('details').forEach(d => d.open = false);
+      $$('.qa-item').forEach(it => {
+        const qtxt = it.querySelector('.question').textContent.toLowerCase();
+        const ok = !n || qtxt.includes(n);
+        it.classList.toggle('hide', !ok);
+        it.classList.toggle('highlight', ok && n);
+        if (ok) { vis++; it.closest('details').open = true; }
       });
-
-      // If no query, remove highlights and collapse to initial state (open first section)
-      if (qn === '') {
-        qaItems().forEach(it => { it.classList.remove('hide','highlight'); });
-        sections().forEach(s => s.open = false);
-        if (sections()[0]) sections()[0].open = true;
-        visible = qaItems().length;
-      }
-
-      updateMatchCount(visible);
+      matchCount.textContent = n ? `${vis} match${vis !== 1 ? 'es' : ''}` : 'Showing all';
     }
+    search.addEventListener('input', e => filter(e.target.value));
+    clear.addEventListener('click', () => { search.value = ''; filter(''); });
 
-    const debouncedFilter = debounce(e => filterQuery(e.target.value), 120);
+    // expand/collapse
+    $('#expandAll').onclick = () => $$('details').forEach(d => d.open = true);
+    $('#collapseAll').onclick = () => $$('details').forEach(d => d.open = false);
 
-    searchEl.addEventListener('input', debouncedFilter);
-    clearBtn.addEventListener('click', () => { searchEl.value = ''; filterQuery(''); searchEl.focus(); });
+    // download current HTML
+    $('#downloadBtn').onclick = () => {
+      const blob = new Blob(['<!doctype html>' + document.documentElement.outerHTML], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'qna_mobile.html';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    };
 
-    expandAllBtn.addEventListener('click', () => sections().forEach(s => s.open = true));
-    collapseAllBtn.addEventListener('click', () => sections().forEach(s => s.open = false));
-
-    // keyboard shortcuts: Ctrl/Cmd+K to focus search, Esc to clear
-    document.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        searchEl.focus();
-        searchEl.select();
-      } else if (e.key === 'Escape') {
-        if (searchEl.value) { searchEl.value=''; filterQuery(''); }
-        else searchEl.blur();
-      }
-    });
-
-    // download page: create a cleaned HTML snapshot and trigger a download
-    downloadBtn.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      try {
-        // create a minimal snapshot: include current HTML but keep external styles/scripts inline already present
-        const snapshot = `<!doctype html>\\n` + document.documentElement.outerHTML;
-        const blob = new Blob([snapshot], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'ml_qna.html';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        // revoke after short delay
-        setTimeout(() => URL.revokeObjectURL(url), 15000);
-      } catch (err) {
-        alert('Download failed: ' + err);
-      }
-    });
-
-    // initialize state
-    filterQuery('');
+    // auto focus header tap
+    $('header').addEventListener('click', () => search.focus());
+    filter('');
   </script>
 </body>
+
 </html>
